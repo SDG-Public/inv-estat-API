@@ -91,8 +91,8 @@ def test_script():
    outputBlobName	= "test_cancer_PRES_FACT_DET_SP_ADMIN.csv"
    
    # UPLOAD
-   #blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=outputBlobName)  
-   #blob.upload_blob(llista_final)   
+   blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=outputBlobName)  
+   blob.upload_blob(str(llista_final))
       
    return 'Blob subido'
 
