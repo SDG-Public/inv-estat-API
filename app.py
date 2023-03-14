@@ -17,7 +17,7 @@ def index():
    # Establish connection with the blob storage account
     blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=outputBlobName)
     
-    data = 'esto es una prueba de blob'
+   data = 'esto es una prueba de blob'
    
    blob.upload_blob(data)
    
