@@ -47,23 +47,30 @@ def test_script():
    
    llista_origen = []
    
-   #with open('Detall_SP_Admin.CSV', 'r') as csv_origen:
-   #    csv_reader = csv.reader(csv_origen, delimiter=';')
-   #    for row in csv_reader:
-   #        llista_origen.append(row)
-   #
-   #llista_final = []
-   #
-   #comunitat = "CATALUÑA"
-   #provincia = ""
-   #entidad = ""
-   
    #
    #
    # HASTA AQUI FUNIONA OK!
    #
    #
    
+   
+   
+   with open(file=inputBlobName, 'r') as csv_origen:
+       csv_reader = csv.reader(csv_origen, delimiter=';')
+       for row in csv_reader:
+           llista_origen.append(row)
+   
+   
+   
+   
+   
+   
+   #llista_final = []
+   #
+   #comunitat = "CATALUÑA"
+   #provincia = ""
+   #entidad = ""
+
    #for row in llista_origen:
    #    if len(row) != 0 and "PROVINCIA" in row[0]:
    #        provincia = row[0].split(" ")[8]
