@@ -16,24 +16,26 @@ def index():
 
 
 
-   
-@app.route('/arnau', methods=['GET'])
-def test_script():
+# Aquí determinamos el metodo GET de la URL /run
+@app.route('/run', methods=['GET'])
+def run_script():
 
-   # Define parameters
+   # Definimos los parametros de nuestro Blob Storage
    connectionString = os.environ['CUSTOMCONNSTR_storage']
-
    containerName = "inversionsestat"
    inputBlobName = "Detall_SP_Admin.CSV"
    
-   # DOWNLOAD
+   # Nos conectamos al Blob Storage
    blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=inputBlobName)
-
+    
+   # Descargamos el fichero y guardamos su valor en una variable
    download_stream = blob.download_blob()
    datos = download_stream.readall()
    
+   # Decodificamos los datos ANSI (cp1252)
    str_datos = datos.decode('cp1252')
-
+    
+   # A partir de los datos generamos una lista
    llista_origen = []
    for row in iter(str_datos.splitlines()):
        llista_origen.append(row.split(';'))
@@ -67,12 +69,13 @@ def test_script():
     
    outputBlobName	= anyo + "_PRES_FACT_DET_SP_ADMIN.csv"
    
-   # UPLOAD
+   # Creamos una conexión con un nuevo nombre de destino
    blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=outputBlobName)  
    
+   # Cargamos los datos a un dataframe
    df = pd.DataFrame(llista_final[1:],columns = llista_final[0])
    data = df.to_csv(index=False,sep=";")
-
+   # Los subimos a Blob Storage
    blob.upload_blob(data,overwrite=True)
       
    return 'Blob subido'
@@ -80,21 +83,22 @@ def test_script():
 # Con esta petición GET podemos hacer pruebas. Por ejemplo podemos crear un fichero en nuestro Blob Storage
 
 @app.route('/test', methods=['GET'])
-def query_records():
+def test_script():
    # Define parameters
    connectionString = os.environ['CUSTOMCONNSTR_storage']
    containerName = "inversionsestat"
-   outputBlobName	= "iris_setosa.csv"
+   outputBlobName	= "test.csv"
    
    # Establish connection with the blob storage account
    blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=outputBlobName)
     
-   data = 'esto es una prueba de blob'
+   data = 'Esto es una prueba de blob'
     
    blob.upload_blob(data,overwrite=True)
    
    return 'Blob subido'
 
+# Iniciamos nuestra app
 if __name__ == '__main__':
    app.run()
 
