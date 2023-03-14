@@ -45,10 +45,12 @@ def test_script():
    
    filename = os.path.join(app.instance_path, inputBlobName)
    
-   return filename
-   #with open(file=filename, mode="wb") as sample_blob:
-   #   download_stream = blob.download_blob()
-   #   sample_blob.write(download_stream.readall())
+   
+   with open(filename, mode="wb") as sample_blob:
+      download_stream = blob.download_blob()
+      sample_blob.write(download_stream.readall())
+   
+   return 'Todo ok'
    
    #llista_origen = []
    
