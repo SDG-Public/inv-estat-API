@@ -32,6 +32,7 @@ def query_records():
    
 @app.route('/arnau', methods=['GET'])
 def test_script():
+
    # Define parameters
    connectionString = "DefaultEndpointsProtocol=https;AccountName=storageaccountdessdg;AccountKey=oy2ydW+f9L+p5SLFSHXvcQsn8yzDzTbzT6YPVNItVwnznodLVYcLsR/FAkI42DSqNCoeGYfJIKXf+AStNMBovw==;EndpointSuffix=core.windows.net"
    containerName = "inversionsestat"
@@ -52,15 +53,14 @@ def test_script():
    # HASTA AQUI FUNIONA OK!
    #
    #
+     
    
-   
-   
-   with open(file=inputBlobName, 'r') as csv_origen:
-       csv_reader = csv.reader(csv_origen, delimiter=';')
-       for row in csv_reader:
-           llista_origen.append(row)
-   
-   
+   #with open(file=inputBlobName, 'r') as csv_origen:
+   #    csv_reader = csv.reader(csv_origen, delimiter=';')
+   #    for row in csv_reader:
+   #        llista_origen.append(row)
+   #
+   #
    
    
    
