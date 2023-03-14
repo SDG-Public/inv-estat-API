@@ -45,11 +45,12 @@ def test_script():
    
    filename = os.path.join(app.instance_path, inputBlobName)
    
-   with open(file=filename, mode="wb") as sample_blob:
-      download_stream = blob.download_blob()
-      sample_blob.write(download_stream.readall())
+   return filename
+   #with open(file=filename, mode="wb") as sample_blob:
+   #   download_stream = blob.download_blob()
+   #   sample_blob.write(download_stream.readall())
    
-   llista_origen = []
+   #llista_origen = []
    
    #
    #
@@ -95,7 +96,7 @@ def test_script():
    #
    #anyo = llista_origen[4][0].split(' ')[4]    
     
-   outputBlobName	= "test_cancer_PRES_FACT_DET_SP_ADMIN.csv"
+   #outputBlobName	= "test_cancer_PRES_FACT_DET_SP_ADMIN.csv"
       
    ## UPLOAD
    #blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=outputBlobName)   
@@ -108,7 +109,7 @@ def test_script():
    #with open(outputBlobName, "r") as data:
    #   blob.upload_blob(data)
       
-   return 'Blob subido'
+   #return 'Blob subido'
 
 if __name__ == '__main__':
    app.run()
