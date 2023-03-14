@@ -46,7 +46,7 @@ def test_script():
    filename = os.path.join(app.instance_path, inputBlobName)
    
    
-   with open(filename, mode="wb") as sample_blob:
+   with open(filename, mode="w") as sample_blob:
       download_stream = blob.download_blob()
       sample_blob.write(download_stream.readall())
    
