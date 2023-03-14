@@ -8,10 +8,9 @@ app = Flask(__name__)
 
 
 def index():
-    return json.dumps({'name': 'alice',
-                       'email': 'alice@outlook.com'})
+    return '<p> te devuelvo un texto </p>'
                        
-print('asa')
+#print('asa')
 
 
 app.run()
