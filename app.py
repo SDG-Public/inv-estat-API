@@ -3,13 +3,14 @@ from flask import Flask, render_template, request, redirect, url_for, send_from_
 import json
 from azure.storage.blob import BlobClient
 import csv
+import os
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-   
+
    return json.dumps({'name': 'alice',
                        'email': 'alice@outlook.com'})
 
@@ -40,9 +41,11 @@ def test_script():
    
    # DOWNLOAD
    blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=inputBlobName)
-   blob.download_blob()
+   #blob.download_blob()
    
-   with open(file=inputBlobName, mode="wb") as sample_blob:
+   filename = os.path.join(app.instance_path, inputBlobName)
+   
+   with open(file=filename, mode="wb") as sample_blob:
       download_stream = blob.download_blob()
       sample_blob.write(download_stream.readall())
    
