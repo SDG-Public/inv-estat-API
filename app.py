@@ -19,7 +19,7 @@ def index():
     
    data = 'esto es una prueba de blob'
     
-   #blob.upload_blob(data)
+   blob.upload_blob(data)
    
    return json.dumps({'name': 'alice',
                        'email': 'alice@outlook.com'})
