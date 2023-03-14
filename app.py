@@ -92,7 +92,11 @@ def test_script():
    
    # UPLOAD
    blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=outputBlobName)  
-   blob.upload_blob(str(llista_final))
+   
+   df = pd.DataFrame(llista_final[1:],columns = llista_final[0])
+   data = df.to_csv(index=False,sep=";")
+
+   blob.upload_blob(data,overwrite=True)
       
    return 'Blob subido'
 
