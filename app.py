@@ -49,7 +49,7 @@ def test_script():
    
    str_datos = datos.decode('cp1252')
     
-   return datos
+   return str_datos
    
    #
    #
