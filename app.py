@@ -57,7 +57,7 @@ def test_script():
    comunitat = "CATALUÑA"
    provincia = ""
    entidad = ""
-   try
+   try:
    
     for row in llista_origen:
         if len(row) != 0 and "PROVINCIA" in row[0]:
