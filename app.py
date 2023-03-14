@@ -88,7 +88,7 @@ def test_script():
    
    anyo = llista_origen[4][0].split(' ')[4]    
     
-   outputBlobName	= "test_cancer_PRES_FACT_DET_SP_ADMIN.csv"
+   outputBlobName	= anyo + "_PRES_FACT_DET_SP_ADMIN.csv"
    
    # UPLOAD
    blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=outputBlobName)  
