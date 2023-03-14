@@ -12,8 +12,7 @@ app = Flask(__name__)
 # Este controla la pagina inicial de nuestra Web App
 @app.route('/')
 def index():
-   connectionString = os.environ['CUSTOMCONNSTR_storage']
-   return connectionString
+   return "¡La app está activa!"
 
 
 
