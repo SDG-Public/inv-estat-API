@@ -9,6 +9,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+   
+   return json.dumps({'name': 'alice',
+                       'email': 'alice@outlook.com'})
+
+
+@app.route('/run', methods=['GET'])
+def query_records():
    # Define parameters
    connectionString = "DefaultEndpointsProtocol=https;AccountName=storageaccountdessdg;AccountKey=oy2ydW+f9L+p5SLFSHXvcQsn8yzDzTbzT6YPVNItVwnznodLVYcLsR/FAkI42DSqNCoeGYfJIKXf+AStNMBovw==;EndpointSuffix=core.windows.net"
    containerName = "inversionsestat"
@@ -21,9 +28,7 @@ def index():
     
    blob.upload_blob(data)
    
-   return json.dumps({'name': 'alice',
-                       'email': 'alice@outlook.com'})
-
+   return 'Blob subido'
 
 if __name__ == '__main__':
    app.run()
