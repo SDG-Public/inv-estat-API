@@ -5,6 +5,8 @@ from azure.storage.blob import BlobClient
 import csv
 import os
 
+
+
 app = Flask(__name__)
 
 
@@ -49,9 +51,15 @@ def test_script():
    #with open(filename, mode="w") as sample_blob:
    #   download_stream = blob.download_blob()
    #   sample_blob.write(download_stream.readall())
+   
+   
    download_stream = blob.download_blob()
    datos = download_stream.readall()
-   return datos
+   
+   for row in datos.splitlines:
+      return row 
+   
+   
    
    #llista_origen = []
    
