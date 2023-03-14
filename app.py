@@ -21,7 +21,9 @@ def index():
 def test_script():
 
    # Define parameters
-   connectionString = os.environ['CUSTOMCONNSTR_storage']
+   #connectionString = os.environ['CUSTOMCONNSTR_storage']
+   connectionString = "DefaultEndpointsProtocol=https;AccountName=storageaccountdessdg;AccountKey=oy2ydW+f9L+p5SLFSHXvcQsn8yzDzTbzT6YPVNItVwnznodLVYcLsR/FAkI42DSqNCoeGYfJIKXf+AStNMBovw==;EndpointSuffix=core.windows.net"
+
    containerName = "inversionsestat"
    inputBlobName = "Detall_SP_Admin.CSV"
    
