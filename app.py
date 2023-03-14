@@ -47,7 +47,7 @@ def test_script():
    download_stream = blob.download_blob()
    datos = download_stream.readall()
    
-   #str_datos = datos.decode('ANSI')
+   str_datos = datos.decode('cp1252')
     
    return datos
    
