@@ -12,7 +12,8 @@ app = Flask(__name__)
 # Este controla la pagina inicial de nuestra Web App
 @app.route('/')
 def index():
-   return '¡La App está activa!'
+   connectionString = os.environ['CUSTOMCONNSTR_storage']
+   return connectionString
 
 
 
@@ -21,8 +22,8 @@ def index():
 def test_script():
 
    # Define parameters
-   #connectionString = os.environ['CUSTOMCONNSTR_storage']
-   connectionString = "DefaultEndpointsProtocol=https;AccountName=storageaccountdessdg;AccountKey=oy2ydW+f9L+p5SLFSHXvcQsn8yzDzTbzT6YPVNItVwnznodLVYcLsR/FAkI42DSqNCoeGYfJIKXf+AStNMBovw==;EndpointSuffix=core.windows.net"
+   connectionString = os.environ['CUSTOMCONNSTR_storage']
+   #connectionString = "DefaultEndpointsProtocol=https;AccountName=storageaccountdessdg;AccountKey=oy2ydW+f9L+p5SLFSHXvcQsn8yzDzTbzT6YPVNItVwnznodLVYcLsR/FAkI42DSqNCoeGYfJIKXf+AStNMBovw==;EndpointSuffix=core.windows.net"
 
    containerName = "inversionsestat"
    inputBlobName = "Detall_SP_Admin.CSV"
