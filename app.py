@@ -89,8 +89,8 @@ def test_script():
        for line in llista_final:
            writer.writerow(line)
 
-   with open(outputBlobName, "rb") as data:
-      blob.upload_blob(data)
+   #with open(outputBlobName, "r") as data:
+   #   blob.upload_blob(data)
       
    return 'Blob subido'
 
