@@ -48,47 +48,45 @@ def test_script():
    datos = download_stream.readall()
    
    str_datos = datos.decode('ANSI')
-    
-   
-   
-   
+
    #
    #
    # HASTA AQUI FUNIONA OK!
    #
    #
+   
    llista_origen = []
    for row in iter(str_datos.splitlines()):
        llista_origen.append(row.split(';'))
 
-   llista_final = []
-   
-   comunitat = "CATALUÑA"
-   provincia = ""
-   entidad = ""
-
-   for row in llista_origen:
-       if len(row) != 0 and "PROVINCIA" in row[0]:
-           provincia = row[0].split(" ")[8]
-       if len(row) > 2 and "ENTIDAD" in row[2]:
-           aux = row[2].split(":")
-           if len(aux) > 1:
-               entidad = aux[1]
-       if len(row) != 0 and row[0].isdigit():
-           toappend = []
-           toappend.extend([comunitat, provincia, entidad, row[0]])
-           toappend.extend(list(row[i] for i in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]))
-           llista_final.append(toappend)
-   
-   capcelera = ['COMUNITAT_AUTONOMA', 'PROVINCIA', 'ENTITAT', 'CODI PROJECTE', 'DENOMINACIO', 'COST TOTAL', 'INICI', 'FI',
-                'TIPUS', 'ANY_ANTERIOR', 'ANY_ACTUAL', 'ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
-   
-   llista_final.insert(0, capcelera)
-   
-   
-   anyo = llista_origen[4][0].split(' ')[4]    
-    
-   outputBlobName	= "test_cancer_PRES_FACT_DET_SP_ADMIN.csv"
+   #llista_final = []
+   #
+   #comunitat = "CATALUÑA"
+   #provincia = ""
+   #entidad = ""
+   #
+   #for row in llista_origen:
+   #    if len(row) != 0 and "PROVINCIA" in row[0]:
+   #        provincia = row[0].split(" ")[8]
+   #    if len(row) > 2 and "ENTIDAD" in row[2]:
+   #        aux = row[2].split(":")
+   #        if len(aux) > 1:
+   #            entidad = aux[1]
+   #    if len(row) != 0 and row[0].isdigit():
+   #        toappend = []
+   #        toappend.extend([comunitat, provincia, entidad, row[0]])
+   #        toappend.extend(list(row[i] for i in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]))
+   #        llista_final.append(toappend)
+   #
+   #capcelera = ['COMUNITAT_AUTONOMA', 'PROVINCIA', 'ENTITAT', 'CODI PROJECTE', 'DENOMINACIO', 'COST TOTAL', 'INICI', 'FI',
+   #             'TIPUS', 'ANY_ANTERIOR', 'ANY_ACTUAL', 'ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
+   #
+   #llista_final.insert(0, capcelera)
+   #
+   #
+   #anyo = llista_origen[4][0].split(' ')[4]    
+   # 
+   #outputBlobName	= "test_cancer_PRES_FACT_DET_SP_ADMIN.csv"
       
    ## UPLOAD
    #blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=outputBlobName)   
