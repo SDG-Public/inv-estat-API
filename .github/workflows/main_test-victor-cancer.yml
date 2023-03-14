@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'test-victor-cancer'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BFB3312AF6084176A62D63F99B208A77 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0836B1930094460292D793327FBFDBD0 }}
