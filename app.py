@@ -84,7 +84,7 @@ def test_script():
    # UPLOAD
    blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=outputBlobName)   
 
-   with open(outputBlobName,"wb") as csv_file:
+   with open(outputBlobName,"w") as csv_file:
        writer = csv.writer(csv_file, delimiter=';')
        for line in llista_final:
            writer.writerow(line)
