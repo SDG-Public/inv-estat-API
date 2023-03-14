@@ -21,7 +21,7 @@ def index():
 def test_script():
 
    # Define parameters
-   connectionString = os.environ['storage']
+   connectionString = os.environ['CUSTOMCONNSTR_storage']
    containerName = "inversionsestat"
    inputBlobName = "Detall_SP_Admin.CSV"
    
