@@ -48,16 +48,18 @@ def test_script():
    datos = download_stream.readall()
    
    str_datos = datos.decode('ANSI')
-
+    
+   return str_datos
+   
    #
    #
    # HASTA AQUI FUNIONA OK!
    #
    #
    
-   llista_origen = []
-   for row in iter(str_datos.splitlines()):
-       llista_origen.append(row.split(';'))
+   #llista_origen = []
+   #for row in iter(str_datos.splitlines()):
+   #    llista_origen.append(row.split(';'))
 
    #llista_final = []
    #
@@ -99,7 +101,7 @@ def test_script():
    #with open(outputBlobName, "r") as data:
    #   blob.upload_blob(data)
       
-   return 'Blob subido'
+   #return 'Blob subido'
 
 if __name__ == '__main__':
    app.run()
