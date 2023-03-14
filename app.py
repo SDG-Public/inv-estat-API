@@ -41,17 +41,17 @@ def test_script():
    blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=inputBlobName)
    blob.download_blob()
    
-   #with open(file=inputBlobName, mode="wb") as sample_blob:
-   #   download_stream = blob.download_blob()
-   #   sample_blob.write(download_stream.readall())
-   #
-   #llista_origen = []
-   #
-   #with open('Detall_SP_Admin.CSV', 'r') as csv_origen:
-   #    csv_reader = csv.reader(csv_origen, delimiter=';')
-   #    for row in csv_reader:
-   #        llista_origen.append(row)
-   #
+   with open(file=inputBlobName, mode="wb") as sample_blob:
+      download_stream = blob.download_blob()
+      sample_blob.write(download_stream.readall())
+   
+   llista_origen = []
+   
+   with open('Detall_SP_Admin.CSV', 'r') as csv_origen:
+       csv_reader = csv.reader(csv_origen, delimiter=';')
+       for row in csv_reader:
+           llista_origen.append(row)
+   
    #llista_final = []
    #
    #comunitat = "CATALUÑA"
