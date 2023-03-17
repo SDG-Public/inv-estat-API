@@ -5,6 +5,8 @@ from azure.storage.blob import BlobClient
 import csv
 import os
 import pandas as pd
+from office365.sharepoint.client_context import ClientContext
+from office365.runtime.auth.authentication_context import AuthenticationContext
 
 
 app = Flask(__name__)
@@ -16,9 +18,61 @@ def index():
 
 
 
-# Aquí determinamos el metodo GET de la URL /run
-@app.route('/run', methods=['GET'])
-def run_script():
+# Descargamos los ficheros del SharePoint
+@app.route('/download')
+def download_files():
+   
+
+   # Parametros de conexión a SharePoint
+   baseurl = 'https://gencat.sharepoint.com'
+   basesite = '/sites/Provespython' 
+   siteurl = baseurl + basesite
+   relative_url = f'Shared Documents/'
+
+   username = os.environ['CUSTOMCONNSTR_username'] #config.username
+   pwd = os.environ['CUSTOMCONNSTR_password'] #config.password
+   
+   ctx_auth = AuthenticationContext(siteurl) # should also be the siteurl
+   ctx_auth.acquire_token_for_user(username, pwd)
+   ctx = ClientContext(siteurl, ctx_auth) # make sure you auth to the siteurl.
+   
+   
+   
+   # Parametros de conexion Blob Storage
+   connectionString = os.environ['CUSTOMCONNSTR_storage']
+   containerName = "inversionsestat"
+   
+   with open(os.path.join(app.root_path, 'lista_ficheros.lst'),'r') as f:
+      lista_ficheros = f.read().splitlines()
+    
+   for fichero in lista_ficheros: 
+
+      # Bajada y subida de fichero
+      relative_file_path = f'/sites/Provespython/Shared Documents/'
+      down_file_path = relative_file_path + fichero
+      
+      # Creamos una conexión con un nuevo nombre de destino
+      blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName,
+                                            blob_name=fichero)
+      
+      response = File.open_binary(ctx, down_file_path)
+      blob.upload_blob(response.content, overwrite=True)
+                                         
+   
+   return "Archivos descargados correctamente"
+
+
+
+
+
+
+
+
+
+
+# Aquí determinamos el metodo GET de la URL /SP_Admin
+@app.route('/SP_Admin', methods=['GET'])
+def SP_Admin_script():
 
    # Definimos los parametros de nuestro Blob Storage
    connectionString = os.environ['CUSTOMCONNSTR_storage']
