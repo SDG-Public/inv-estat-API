@@ -72,8 +72,8 @@ def individual(llista):
         if row != [] and (len(llista)-7) > x > 10 and row[4] != 'TOTAL' and (row[11] != '' or row[12] != '' or
         row[13] != '' or row[14] != '' or row[15] != '' or row[10] != ''):
             if row[0] != '':
-            id_org = row[0]
-            desc_org = row[4]
+                id_org = row[0]
+                desc_org = row[4]
             if row[1] != '':
                 idprograma = row[1]
             if row[2] != '':
