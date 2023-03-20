@@ -67,7 +67,7 @@ def index():
    return "¡La app está activa!"
 
 
-"""
+
 # Descargamos los ficheros del SharePoint
 @app.route('/download')
 def download_files():
@@ -185,7 +185,7 @@ def CCAA_Ministeris_script():
    
    return 'Blob CCAA_Ministeris subido'
 
-
+"""
 
 # 1.1
 # Python original: 
