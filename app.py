@@ -259,6 +259,109 @@ def Estado_org_script():
   
 
 
+
+# 1.2
+# Python original: 
+# G:\Unidades compartidas\Sector Públic BCN\01. Generalitat de Catalunya\07. PDA\01. Projectes\202210_GENE UTE SPD - QdC Seguiment Inversions estat\07. Document tècnic\Python\1.Pressupost\2. Resumenes de inversiones\Agrupación
+# Aquí determinamos el metodo GET de la URL /Resum_inv
+@app.route('/Resum_inv', methods=['GET'])
+def Resum_inv_script():
+
+    
+    # Creem les llistes buides
+    estado=[]
+    ooaa=[]
+    restoent=[]
+    ss_ss=[]
+    
+    # Obrim els 4 arxius
+    # Només agafarem la part de la informació interessant, juntament amb l'any i el tipus d'inversió, els quals trobem a les fileres 2 i 3 del csv.
+    
+    # Primer fitxer
+    csv_reader_estado = descarga_blob('ESTADO.CSV')
+
+    any = ''
+    tipus_inversio = ''
+
+    for x,row in enumerate(csv_reader_estado):
+        if len(row) > 0:
+            if x == 1:
+                tipus_inversio = (row[1].split(" "))[3]
+            if x == 2:
+                any = (row[1].split(" "))[2]
+            elif x >= 8 and row[0] != 'TOTAL' and row[0] != '':
+                estado.append([row[0], row[1], any, tipus_inversio])
+    
+    # Segon fitxer
+    csv_reader_ooaa = descarga_blob('OOAA.CSV')
+    any = ''
+    tipus_inversio = ''
+    for x,row in enumerate(csv_reader_ooaa):
+        if len(row) > 0:
+            if x == 1:
+                tipus_inversio = (row[1].split(" "))[3]
+            if x == 2:
+                any = (row[1].split(" "))[2]
+            elif x >= 8 and row[0] != 'TOTAL' and row[0] != '':
+                ooaa.append([row[0], row[1], any, tipus_inversio])
+    
+    # Tercer fitxer
+    csv_reader_restoent = descarga_blob('RESTOENT.CSV')
+    any = ''
+    tipus_inversio = ''
+    
+    for x,row in enumerate(csv_reader_restoent):
+        if len(row) > 0:
+            if x == 1:
+                tipus_inversio = (row[1].split(" "))[3]
+            if x == 2:
+                any = (row[1].split(" "))[2]
+            elif x >= 8 and row[0] != 'TOTAL' and row[0] != '':
+                restoent.append([row[0], row[1], any, tipus_inversio])
+                
+    # Quart fitxer             
+    csv_reader_ss_ss = descarga_blob('SS_SS.CSV')
+    any = ''
+    tipus_inversio = ''
+    for x,row in enumerate(csv_reader_ss_ss):
+        if len(row) > 0:
+            if x == 1:
+                tipus_inversio = (row[1].split(" "))[3]
+            if x == 2:
+                any = (row[1].split(" "))[2]
+            elif x >= 8 and row[0] != 'TOTAL' and row[0] != '':
+                ss_ss.append([row[0], row[1], any, tipus_inversio])
+            
+    
+    # Seguidament, seleccionarem només les comunitats autònomes ignorant les províncies.
+    
+    llista_CCAA = ['PAIS VASCO', 'CATALUÑA', 'GALICIA', 'ANDALUCIA', 'ASTURIAS', 'CANTABRIA', 'LA RIOJA',
+                'REGION DE MURCIA', 'COMUNIDAD VALENCIANA', 'ARAGON', 'CASTILLA-LA MANCHA', 'CANARIAS', 'NAVARRA',
+                'EXTREMADURA', 'BALEARS', 'MADRID', 'CASTILLA Y LEON', '  CEUTA', 'MELILLA', 'NO REGIONALIZABLE',
+                'EXTRANJERO']
+    
+    # Unifiquem les 4 llistes i creem un bucle per ignorar les províncies.
+    llista_union = estado + ooaa + restoent + ss_ss
+    
+    llista_final = []
+    
+    for x,row in enumerate(llista_union):
+        if llista_union[x][0] in llista_CCAA:
+            llista_final.append(row)
+
+    
+    capcelera = ['COMUNITAT_AUTONOMA', 'COST_TOTAL', 'ANY_EXC_PRESUPOSTARI', 'INVERSIO']
+    llista_final.insert(0, capcelera)
+    
+    
+    upload_file = str(any)+'_PRES_FACT_AGR_RESUMEN_INVERSIONS.csv'
+    subida_blob(upload_file,llista_final)
+    
+    return 'Blob Resumen Inv subido'
+
+
+
+
 # Iniciamos nuestra app
 if __name__ == '__main__':
    app.run()

@@ -261,7 +261,7 @@ def Estado_org_script():
     
     return 'Blob Estado Org subido'
 
-"""
+
 
 # 1.2
 # Python original: 
@@ -364,7 +364,7 @@ def Resum_inv_script():
 
 
 
-
+"""
 
 
 
