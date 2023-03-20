@@ -283,7 +283,7 @@ def Resum_inv_script():
     # Primer fitxer
     csv_reader_estado = descarga_blob('ESTADO.CSV')
 
-    any = ''
+    anyo = ''
     tipus_inversio = ''
 
     for x,row in enumerate(csv_reader_estado):
@@ -291,26 +291,26 @@ def Resum_inv_script():
             if x == 1:
                 tipus_inversio = (row[1].split(" "))[3]
             if x == 2:
-                any = (row[1].split(" "))[2]
+                anyo = (row[1].split(" "))[2]
             elif x >= 8 and row[0] != 'TOTAL' and row[0] != '':
-                estado.append([row[0], row[1], any, tipus_inversio])
+                estado.append([row[0], row[1], anyo, tipus_inversio])
     
     # Segon fitxer
     csv_reader_ooaa = descarga_blob('OOAA.CSV')
-    any = ''
+    anyo = ''
     tipus_inversio = ''
     for x,row in enumerate(csv_reader_ooaa):
         if len(row) > 0:
             if x == 1:
                 tipus_inversio = (row[1].split(" "))[3]
             if x == 2:
-                any = (row[1].split(" "))[2]
+                anyo = (row[1].split(" "))[2]
             elif x >= 8 and row[0] != 'TOTAL' and row[0] != '':
-                ooaa.append([row[0], row[1], any, tipus_inversio])
+                ooaa.append([row[0], row[1], anyo, tipus_inversio])
     
     # Tercer fitxer
     csv_reader_restoent = descarga_blob('RESTOENT.CSV')
-    any = ''
+    anyo = ''
     tipus_inversio = ''
     
     for x,row in enumerate(csv_reader_restoent):
@@ -318,22 +318,22 @@ def Resum_inv_script():
             if x == 1:
                 tipus_inversio = (row[1].split(" "))[3]
             if x == 2:
-                any = (row[1].split(" "))[2]
+                anyo = (row[1].split(" "))[2]
             elif x >= 8 and row[0] != 'TOTAL' and row[0] != '':
-                restoent.append([row[0], row[1], any, tipus_inversio])
+                restoent.append([row[0], row[1], anyo, tipus_inversio])
                 
     # Quart fitxer             
     csv_reader_ss_ss = descarga_blob('SS_SS.CSV')
-    any = ''
+    anyo = ''
     tipus_inversio = ''
     for x,row in enumerate(csv_reader_ss_ss):
         if len(row) > 0:
             if x == 1:
                 tipus_inversio = (row[1].split(" "))[3]
             if x == 2:
-                any = (row[1].split(" "))[2]
+                anyo = (row[1].split(" "))[2]
             elif x >= 8 and row[0] != 'TOTAL' and row[0] != '':
-                ss_ss.append([row[0], row[1], any, tipus_inversio])
+                ss_ss.append([row[0], row[1], anyo, tipus_inversio])
             
     
     # Seguidament, seleccionarem només les comunitats autònomes ignorant les províncies.
@@ -357,7 +357,7 @@ def Resum_inv_script():
     llista_final.insert(0, capcelera)
     
     
-    upload_file = str(any)+'_PRES_FACT_AGR_RESUMEN_INVERSIONS.csv'
+    upload_file = str(anyo)+'_PRES_FACT_AGR_RESUMEN_INVERSIONS.csv'
     subida_blob(upload_file,llista_final)
     
     return 'Blob Resumen Inv subido'

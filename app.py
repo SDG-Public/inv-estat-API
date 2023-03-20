@@ -353,10 +353,12 @@ def Resum_inv_script():
     llista_final.insert(0, capcelera)
     
     
-    upload_file = str(any)+'_PRES_FACT_AGR_RESUMEN_INVERSIONS.csv'
+    upload_file = str(anyo)+'_PRES_FACT_AGR_RESUMEN_INVERSIONS.csv'
     subida_blob(upload_file,llista_final)
     
     return 'Blob Resumen Inv subido'
+
+
 
 
 
