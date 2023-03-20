@@ -120,11 +120,11 @@ def CCAA_Ministeris_script():
    
    # Obrim el fitxer i introduïm registres
 
-   for x,row in enumerate(csv_reader):
+   for x,row in enumerate(csv_origen):
        if 6 < x < 83:
            llista_origen.append(row)
 
-   for row in csv_reader:
+   for row in csv_origen:
        llista_any.append(row)
    
    
