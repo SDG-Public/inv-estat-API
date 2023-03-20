@@ -9,7 +9,7 @@ from office365.sharepoint.client_context import ClientContext
 from office365.sharepoint.files.file import File
 from office365.runtime.auth.authentication_context import AuthenticationContext
 
-
+"""
 # Parametros de conexion Blob Storage
 connectionString = os.environ['CUSTOMCONNSTR_storage']
 containerName = "inversionsestat"
@@ -56,7 +56,7 @@ def subida_blob(upload_file,llista_final):
    data = df.to_csv(index=False,sep=";")
    # Los subimos a Blob Storage
    blob.upload_blob(data,overwrite=True)
-
+"""
 
 
 app = Flask(__name__)
