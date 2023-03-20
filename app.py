@@ -4,12 +4,14 @@ import json
 from azure.storage.blob import BlobClient
 import csv
 import os
+
+"""
 import pandas as pd
 from office365.sharepoint.client_context import ClientContext
 from office365.sharepoint.files.file import File
 from office365.runtime.auth.authentication_context import AuthenticationContext
 
-"""
+
 # Parametros de conexion Blob Storage
 connectionString = os.environ['CUSTOMCONNSTR_storage']
 containerName = "inversionsestat"
