@@ -182,6 +182,80 @@ def CCAA_Ministeris_script():
    
    return 'Blob CCAA_Ministeris subido'
 
+
+# 1.1
+# Python original: 
+# G:\Unidades compartidas\Sector Públic BCN\01. Generalitat de Catalunya\07. PDA\01. Projectes\202210_GENE UTE SPD - QdC Seguiment Inversions estat\07. Document tècnic\Python\1.Pressupost\1. Estado, Organismos\Detalle
+# Aquí determinamos el metodo GET de la URL /Estado_org
+@app.route('/Estado_org', methods=['GET'])
+def Estado_org_script():
+
+    llista_108 = descarga_blob('N_22_E_V_2_R_1_202_1_108_1.CSV')
+    llista_114 = descarga_blob('N_22_E_V_2_R_1_202_1_114_1.CSV')
+    llista_115 = descarga_blob('N_22_E_V_2_R_1_202_1_115_1.CSV')
+    llista_116 = descarga_blob('N_22_E_V_2_R_1_202_1_116_1.CSV')
+    llista_117 = descarga_blob('N_22_E_V_2_R_1_202_1_117_1.CSV')
+    #llista_118 = descarga_blob('N_22_E_V_2_R_1_202_1_118_1.CSV')
+    llista_119 = descarga_blob('N_22_E_V_2_R_1_202_1_119_1.CSV')
+    llista_120 = descarga_blob('N_22_E_V_2_R_1_202_1_120_1.CSV')
+    llista_123 = descarga_blob('N_22_E_V_2_R_1_202_1_123_1.CSV')
+    llista_124 = descarga_blob('N_22_E_V_2_R_1_202_1_124_1.CSV')
+    llista_128 = descarga_blob('N_22_E_V_2_R_1_202_1_128_1.CSV')
+    llista_final = []
+
+    def individual(llista):
+        tot_ministeri = llista[3][1].split(':')[1]
+        ministeri = tot_ministeri[4:]
+        id_ministeri = tot_ministeri.split(' ')[1]
+        Id_CCAA = llista[4][1].split(':')[1]
+        CCAA = Id_CCAA.split(' ')[2]
+        x = 0
+        id_org = ''
+        desc_org = ''
+        idprograma = ''
+        article = ''
+        for x,row in enumerate(llista):
+            if row != [] and (len(llista)-7) > x > 10 and row[4] != 'TOTAL' and (row[11] != '' or row[12] != '' or
+            row[13] != '' or row[14] != '' or row[15] != '' or row[10] != ''):
+                if row[0] != '':
+                id_org = row[0]
+                desc_org = row[4]
+                if row[1] != '':
+                    idprograma = row[1]
+                if row[2] != '':
+                    article = row[2]
+                if row[3] != '':
+                    toappend = []
+                    toappend.extend([id_ministeri, ministeri, CCAA, id_org, idprograma, article, desc_org])
+                    toappend.extend(list(row[i] for i in [3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15]))
+                    llista_final.append(toappend)
+    
+    
+    individual(llista_108)
+    individual(llista_114)
+    individual(llista_115)
+    individual(llista_116)
+    individual(llista_117)
+    individual(llista_119)
+    individual(llista_120)
+    individual(llista_123)
+    individual(llista_124)
+    individual(llista_128)
+    
+    
+    capcelera = ['ID_MINISTERI','DESC_MINISTERI' ,'COMUNITAT_AUTONOMA', 'CODI_CENTRE','ID_PROGRAMA', 'ID_ARTICLE',
+                'DESC_CENTRE','ID_PROJECTE', 'NOM_PROJECTE',
+                'ANY_INICI', 'ANY_FI', 'PROVINCIA', 'TIPUS', 'COST_TOTAL', 'ANY_ANTERIOR', 'ANY_ACTUAL',
+                'ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
+    
+    llista_final.insert(0, capcelera)
+    
+    anyo = llista_108[5][1].split(' ')[2]
+
+    upload_file = anyo + '_PRES_FACT_AGR_MIN_EST_OOAA_RE.csv'
+    subida_blob(upload_file,llista_final)
+    
+    return 'Blob Estado Org subido'
   
 
 

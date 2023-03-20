@@ -185,7 +185,7 @@ def CCAA_Ministeris_script():
    
    return 'Blob CCAA_Ministeris subido'
 
-"""
+
 
 # 1.1
 # Python original: 
@@ -261,6 +261,7 @@ def Estado_org_script():
     
     return 'Blob Estado Org subido'
 
+"""
 
 # 1.2
 # Python original: 
