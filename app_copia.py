@@ -69,7 +69,7 @@ def index():
 
 
 # Descargamos los ficheros del SharePoint
-@app.route('/download')
+@app.route('/download', methods=['GET'])
 def download_files():
 
    # Parametros de conexión a SharePoint
