@@ -202,7 +202,10 @@ def CCAA_Ministeris_script():
    
    for x in range(1,23):
        for y in range(1, 57):
+           print(x)
+           print(y)
            llista_tupla = [llista[0][x], llista[y][0], llista[y][x]]
+           print(llista_tupla)
            llista_final.append(llista_tupla)
    
    capcelera = ['MINISTERI', 'COMUNIDAD AUTONOMA', 'COST TOTAL']
