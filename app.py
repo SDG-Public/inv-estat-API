@@ -86,7 +86,62 @@ def individual(llista,llista_final):
                     llista_final.append(toappend)
     return llista_final
 
-
+def individual_SS(llista,llistafinal):
+        provincia = ''
+        if llista == llista_BCN:
+            provincia = 'BARCELONA'
+        if llista == llista_TGN:
+            provincia = 'TARRAGONA'
+        if llista == llista_LLEIDA:
+            provincia = 'LLEIDA'
+        if llista == llista_GIR:
+            provincia = 'GIRONA'
+        imptotal = ''
+        anyactual = ''
+        any1 = ''
+        any2 = ''
+        any3 = ''
+        entitat = ''
+        contador = 1
+        for row in llista:
+            if row[0] != '' and row[5].split(' ')[0] != 'TOTAL':
+                organisme = row[0]
+            if row[1] != '' and row[5].split(' ')[0] != 'TOTAL':
+                programa = row[1]
+            if row[2] != '' and row[5].split(' ')[0] != 'TOTAL':
+                article = row[2]
+            if row[3] != '' and row[5].split(' ')[0] != 'TOTAL':
+                centretipus = row[3]
+            if row[4] != '' and row[5].split(' ')[0] != 'TOTAL':
+                numero = row[4]
+            if row[5] != '' and row[5].split(' ')[0] != 'TOTAL':
+                denominacio = row[5]
+            if row[6] != '' and row[5].split(' ')[0] != 'TOTAL':
+                inici = row[6]
+            if row[7] != '' and row[5].split(' ')[0] != 'TOTAL':
+                final = row[7]
+            if row[8] != '' and row[5].split(' ')[0] != 'TOTAL':
+                imptotal = row[8]
+            if row[9] != '' and row[5].split(' ')[0] != 'TOTAL':
+                anyactual = row[9]
+            if row[10] != '' and row[5].split(' ')[0] != 'TOTAL':
+                any1 = row[10]
+            if row[11] != '' and row[5].split(' ')[0] != 'TOTAL':
+                any2 = row[11]
+            if row[12] != '' and row[5].split(' ')[0] != 'TOTAL':
+                any3 = row[12]
+            if row[5] != '' and row[5].split(' ')[0] == 'TOTAL' and row[5].split(' ')[1] == 'ENTIDAD....':
+                toappendentitat = []
+                toappendentitat.extend([provincia[:1] + str(contador), row[5][24:]])
+                llistaentitat.append(toappendentitat)
+                contador = contador + 1
+    
+            if row[5].split(' ')[0] != 'TOTAL':
+                toappend = []
+                toappend.extend([organisme, programa, article, centretipus, numero, denominacio, inici, final,
+                                imptotal, anyactual, any1, any2, any3, provincia, provincia[:1] + str(contador)])
+                llistafinal.append(toappend)
+    return llistafinal
 
 app = Flask(__name__)
 
@@ -464,6 +519,7 @@ def Agr_SP_Empresarial_script():
     
     # Afegim els registres interessants a la llista
     for i in range(6, 25):
+        item_to_append = llista[i]
         # Eliminamos la columna 6 que aparece vacia en el CSV
         llistafinal.append(item_to_append[0:6])
     
@@ -509,8 +565,7 @@ def Detall_SP_Empresarial_script():
             toappend.extend(list(row[i] for i in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]))
             llista_final.append(toappend)
     
-    capcelera = ['COMUNITAT_AUTONOMA', 'PROVINCIA', 'ENTITAT', 'CODI PROJECTE', 'DENOMINACIO', 'COST TOTAL', 'INICI', 'FI',
-                'TIPUS', 'ANY_ANTERIOR', 'ANY_ACTUAL', 'ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
+    capcelera = ['COMUNITAT_AUTONOMA', 'PROVINCIA', 'ENTITAT', 'CODI PROJECTE', 'DENOMINACIO', 'COST TOTAL', 'INICI', 'FI','TIPUS', 'ANY_ANTERIOR', 'ANY_ACTUAL', 'ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
     
     llista_final.insert(0, capcelera)
     
@@ -540,73 +595,17 @@ def SS_script():
     llista_LLEIDA = descarga_blob('SS_LLEIDA.CSV')
     llista_GIR = descarga_blob('SS_GIR.CSV')
     
-    header = ['Organisme', 'Programa', 'Article', 'Centre Tipus', 'Número', 'Denominació', 'Inici', 'Final',
-            'Import Total', 'ANY', 'ANY+1', 'ANY+2', 'ANY+3', 'Província', 'ID Entitat']
+    header = ['Organisme', 'Programa', 'Article', 'Centre Tipus', 'Número', 'Denominació', 'Inici', 'Final','Import Total', 'ANY', 'ANY+1', 'ANY+2', 'ANY+3', 'Província', 'ID Entitat']
     
     headerentitat = ['ID Entitat', 'Entitat']
     
-    def individual(llista):
-        provincia = ''
-        if llista == llista_BCN:
-            provincia = 'BARCELONA'
-        if llista == llista_TGN:
-            provincia = 'TARRAGONA'
-        if llista == llista_LLEIDA:
-            provincia = 'LLEIDA'
-        if llista == llista_GIR:
-            provincia = 'GIRONA'
-        imptotal = ''
-        anyactual = ''
-        any1 = ''
-        any2 = ''
-        any3 = ''
-        entitat = ''
-        contador = 1
-        for row in llista:
-            if row[0] != '' and row[5].split(' ')[0] != 'TOTAL':
-                organisme = row[0]
-            if row[1] != '' and row[5].split(' ')[0] != 'TOTAL':
-                programa = row[1]
-            if row[2] != '' and row[5].split(' ')[0] != 'TOTAL':
-                article = row[2]
-            if row[3] != '' and row[5].split(' ')[0] != 'TOTAL':
-                centretipus = row[3]
-            if row[4] != '' and row[5].split(' ')[0] != 'TOTAL':
-                numero = row[4]
-            if row[5] != '' and row[5].split(' ')[0] != 'TOTAL':
-                denominacio = row[5]
-            if row[6] != '' and row[5].split(' ')[0] != 'TOTAL':
-                inici = row[6]
-            if row[7] != '' and row[5].split(' ')[0] != 'TOTAL':
-                final = row[7]
-            if row[8] != '' and row[5].split(' ')[0] != 'TOTAL':
-                imptotal = row[8]
-            if row[9] != '' and row[5].split(' ')[0] != 'TOTAL':
-                anyactual = row[9]
-            if row[10] != '' and row[5].split(' ')[0] != 'TOTAL':
-                any1 = row[10]
-            if row[11] != '' and row[5].split(' ')[0] != 'TOTAL':
-                any2 = row[11]
-            if row[12] != '' and row[5].split(' ')[0] != 'TOTAL':
-                any3 = row[12]
-            if row[5] != '' and row[5].split(' ')[0] == 'TOTAL' and row[5].split(' ')[1] == 'ENTIDAD....':
-                toappendentitat = []
-                toappendentitat.extend([provincia[:1] + str(contador), row[5][24:]])
-                llistaentitat.append(toappendentitat)
-                contador = contador + 1
     
-            if row[5].split(' ')[0] != 'TOTAL':
-                toappend = []
-                toappend.extend([organisme, programa, article, centretipus, numero, denominacio, inici, final,
-                                imptotal, anyactual, any1, any2, any3, provincia, provincia[:1] + str(contador)])
-                llistafinal.append(toappend)
-            print(anyactual)
     llistaentitat.insert(0, headerentitat)
     llistafinal.insert(0, header)
-    individual(llista_BCN)
-    individual(llista_TGN)
-    individual(llista_LLEIDA)
-    individual(llista_GIR)
+    llistafinal = individual_SS(llista_BCN,llistafinal)
+    llistafinal = individual_SS(llista_TGN,llistafinal)
+    llistafinal = individual_SS(llista_LLEIDA,llistafinal)
+    llistafinal = individual_SS(llista_GIR,llistafinal)
     
     upload_file	= "PRES_FACT_DET_SEGURETAT_SOCIAL.csv"
     subida_blob(upload_file,llistafinal)
