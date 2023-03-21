@@ -58,7 +58,7 @@ def subida_blob(upload_file,llista_final):
    blob.upload_blob(data,overwrite=True)
    
 
-def individual(llista):
+def individual(llista,llista_final):
     tot_ministeri = llista[3][1].split(':')[1]
     ministeri = tot_ministeri[4:]
     id_ministeri = tot_ministeri.split(' ')[1]
@@ -84,6 +84,7 @@ def individual(llista):
                     toappend.extend([id_ministeri, ministeri, CCAA, id_org, idprograma, article, desc_org])
                     toappend.extend(list(row[i] for i in [3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15]))
                     llista_final.append(toappend)
+    return llista_final
 
 
 
@@ -236,16 +237,16 @@ def Estado_org_script():
 
 
     
-    individual(llista_108)
-    individual(llista_114)
-    individual(llista_115)
-    individual(llista_116)
-    individual(llista_117)
-    individual(llista_119)
-    individual(llista_120)
-    individual(llista_123)
-    individual(llista_124)
-    individual(llista_128)
+    llista_final = individual(llista_108,llista_final)
+    llista_final = individual(llista_114,llista_final)
+    llista_final = individual(llista_115,llista_final)
+    llista_final = individual(llista_116,llista_final)
+    llista_final = individual(llista_117,llista_final)
+    llista_final = individual(llista_119,llista_final)
+    llista_final = individual(llista_120,llista_final)
+    llista_final = individual(llista_123,llista_final)
+    llista_final = individual(llista_124,llista_final)
+    llista_final = individual(llista_128,llista_final)
     
     
     capcelera = ['ID_MINISTERI','DESC_MINISTERI' ,'COMUNITAT_AUTONOMA', 'CODI_CENTRE','ID_PROGRAMA', 'ID_ARTICLE','DESC_CENTRE','ID_PROJECTE', 'NOM_PROJECTE','ANY_INICI', 'ANY_FI', 'PROVINCIA', 'TIPUS', 'COST_TOTAL', 'ANY_ANTERIOR', 'ANY_ACTUAL','ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
