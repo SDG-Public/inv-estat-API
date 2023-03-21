@@ -1,5 +1,0 @@
-Flask==2.0.2
-azure-storage-blob==12.15.0
-pandas
-Office365-REST-Python-Client
-openpyxl
