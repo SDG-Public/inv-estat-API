@@ -86,7 +86,7 @@ def individual(llista,llista_final):
                     llista_final.append(toappend)
     return llista_final
 
-def individual_SS(llista,llistafinal,provincia):
+def individual_SS(llista,llistafinal,provincia,llistaentitat):
 
     imptotal = ''
     anyactual = ''
@@ -593,10 +593,10 @@ def SS_script():
     
     llistaentitat.insert(0, headerentitat)
     llistafinal.insert(0, header)
-    llistafinal = individual_SS(llista_BCN,llistafinal,'BARCELONA')
-    llistafinal = individual_SS(llista_TGN,llistafinal,'TARRAGONA')
-    llistafinal = individual_SS(llista_LLEIDA,llistafinal,'LLEIDA')
-    llistafinal = individual_SS(llista_GIR,llistafinal,'GIRONA')
+    llistafinal = individual_SS(llista_BCN,llistafinal,'BARCELONA',llistaentitat)
+    llistafinal = individual_SS(llista_TGN,llistafinal,'TARRAGONA',llistaentitat)
+    llistafinal = individual_SS(llista_LLEIDA,llistafinal,'LLEIDA',llistaentitat)
+    llistafinal = individual_SS(llista_GIR,llistafinal,'GIRONA',llistaentitat)
     
     upload_file	= "PRES_FACT_DET_SEGURETAT_SOCIAL.csv"
     subida_blob(upload_file,llistafinal)
