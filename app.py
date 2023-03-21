@@ -178,9 +178,9 @@ def CCAA_Ministeris_script():
        llista_origen[x].pop(0)
    
    # Llista CCAA per treure-les
-    llista_CCAA = ['PAIS VASCO', 'CATALUÑA', 'GALICIA', 'ANDALUCIA', 'ASTURIAS', 'CANTABRIA', 'LA RIOJA',
-                   'REGION DE MURCIA', 'COMUNIDAD VALENCIANA', 'ARAGON', 'CASTILLA-LA MANCHA', 'CANARIAS', 'NAVARRA',
-                   'EXTREMADURA', 'BALEARS', 'MADRID', 'CASTILLA Y LEON', 'NO REGIONALIZABLE',
+    llista_CCAA = ['PAIS VASCO', 'CATALUÑA', 'GALICIA', 'ANDALUCIA', 'ASTURIAS', 'CANTABRIA', 'LA RIOJA', \
+                   'REGION DE MURCIA', 'COMUNIDAD VALENCIANA', 'ARAGON', 'CASTILLA-LA MANCHA', 'CANARIAS', 'NAVARRA', \
+                   'EXTREMADURA', 'BALEARS', 'MADRID', 'CASTILLA Y LEON', 'NO REGIONALIZABLE', \
                    'EXTRANJERO']
    
    llista_sense_CCAA = []
