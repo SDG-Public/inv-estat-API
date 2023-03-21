@@ -86,6 +86,7 @@ def individual(llista):
                     llista_final.append(toappend)
 
 
+
 app = Flask(__name__)
 
 # Este controla la pagina inicial de nuestra Web App
