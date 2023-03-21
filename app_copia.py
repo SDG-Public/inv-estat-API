@@ -70,19 +70,19 @@ def individual(llista):
     article = ''
     for x,row in enumerate(llista):
         if row != [] and (len(llista)-7) > x > 10 and row[4] != 'TOTAL' and (row[11] != '' or row[12] != '' or
-        row[13] != '' or row[14] != '' or row[15] != '' or row[10] != ''):
-            if row[0] != '':
-                id_org = row[0]
-                desc_org = row[4]
-            if row[1] != '':
-                idprograma = row[1]
-            if row[2] != '':
-                article = row[2]
-            if row[3] != '':
-                toappend = []
-                toappend.extend([id_ministeri, ministeri, CCAA, id_org, idprograma, article, desc_org])
-                toappend.extend(list(row[i] for i in [3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15]))
-                llista_final.append(toappend)
+            row[13] != '' or row[14] != '' or row[15] != '' or row[10] != ''):
+                if row[0] != '':
+                    id_org = row[0]
+                    desc_org = row[4]
+                if row[1] != '':
+                    idprograma = row[1]
+                if row[2] != '':
+                    article = row[2]
+                if row[3] != '':
+                    toappend = []
+                    toappend.extend([id_ministeri, ministeri, CCAA, id_org, idprograma, article, desc_org])
+                    toappend.extend(list(row[i] for i in [3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15]))
+                    llista_final.append(toappend)
     
 
 app = Flask(__name__)
