@@ -377,7 +377,9 @@ def Agr_SP_Admin_script():
     
     # Afegim els registres interessants a la llista
     for i in range(6, 23):
-        llistafinal.append(llista[i])
+        item_to_append = llista[i]
+        # Eliminamos la columna 6 que aparece vacia en el CSV
+        llistafinal.append(item_to_append[0:6])
     
     
     anyo = llista[2][0].split(' ')[1]

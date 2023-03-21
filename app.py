@@ -376,21 +376,26 @@ def Agr_SP_Admin_script():
 
     # creem les llistes buides i descarreguem fitxer
     llista= descarga_blob('Resum_SP_Admin.CSV')
-    llistafinal=[]
+    llista_final=[]
 
     # Afegim la capcelera a la llista
     header=['COMUNITAT AUTONOMA', 'ANY_ANTERIOR', 'ANY_ACTUAL', 'ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
-    llistafinal.append(header)
+    llista_final.append(header)
     
     # Afegim els registres interessants a la llista
     for i in range(6, 23):
-        llistafinal.append(llista[i])
+        item_to_append = llista[i]
+        # Eliminamos la columna 6 que aparece vacia en el CSV
+        llistafinal.append(item_to_append[0:6])
     
     
     anyo = llista[2][0].split(' ')[1]
     
+    llista_final = llista_final[:][0:6]
+    print(llista_final)
+    
     upload_file = anyo + '_PRES_FACT_AGR_CCAA_SP_ADMIN.csv'
-    subida_blob(upload_file,llistafinal)
+    subida_blob(upload_file,llista_final)
     
     return 'Blob Agr_SP_Admin subido'
     
