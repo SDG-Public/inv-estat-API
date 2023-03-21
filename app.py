@@ -8,7 +8,7 @@ import pandas as pd
 from office365.sharepoint.client_context import ClientContext
 from office365.sharepoint.files.file import File
 from office365.runtime.auth.authentication_context import AuthenticationContext
-
+import re
 
 # Parametros de conexion Blob Storage
 connectionString = os.environ['CUSTOMCONNSTR_storage']
@@ -25,6 +25,10 @@ def descarga_blob(download_file):
    
    # Decodificamos los datos ANSI (cp1252)
    str_datos = datos.decode('cp1252')
+   
+   # Eliminamos salos de linea que pueda haber entre comillas
+   pattern = re.compile(r'".*?"', re.DOTALL)
+   str_datos = pattern.sub(lambda x: x.group().replace('\n', ' '), str_datos) 
     
    # A partir de los datos generamos una lista
    llista_descarregada = []
