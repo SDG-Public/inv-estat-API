@@ -333,11 +333,8 @@ def Resum_inv_script():
     
     # Seguidament, seleccionarem només les comunitats autònomes ignorant les províncies.
     
-    llista_CCAA = ['PAIS VASCO', 'CATALUÑA', 'GALICIA', 'ANDALUCIA', 'ASTURIAS', 'CANTABRIA', 'LA RIOJA',
-                'REGION DE MURCIA', 'COMUNIDAD VALENCIANA', 'ARAGON', 'CASTILLA-LA MANCHA', 'CANARIAS', 'NAVARRA',
-                'EXTREMADURA', 'BALEARS', 'MADRID', 'CASTILLA Y LEON', '  CEUTA', 'MELILLA', 'NO REGIONALIZABLE',
-                'EXTRANJERO']
-    
+   llista_CCAA = ['PAIS VASCO', 'CATALUÑA', 'GALICIA', 'ANDALUCIA', 'ASTURIAS', 'CANTABRIA', 'LA RIOJA','REGION DE MURCIA', 'COMUNIDAD VALENCIANA', 'ARAGON', 'CASTILLA-LA MANCHA', 'CANARIAS', 'NAVARRA','EXTREMADURA', 'BALEARS', 'MADRID', 'CASTILLA Y LEON', 'NO REGIONALIZABLE','EXTRANJERO']
+   
     # Unifiquem les 4 llistes i creem un bucle per ignorar les províncies.
     llista_union = estado + ooaa + restoent + ss_ss
     
@@ -359,7 +356,7 @@ def Resum_inv_script():
 
 
 
-"""
+
 
 
 
@@ -436,7 +433,7 @@ def SP_Admin_script():
       
    return 'Blob SP_Admin subido'
 
-
+"""
 
 # 1.4
 # Python original: 

@@ -366,6 +366,82 @@ def Resum_inv_script():
 
 
 
+
+# 1.3
+# Python original: 
+# G:\Unidades compartidas\Sector Públic BCN\01. Generalitat de Catalunya\07. PDA\01. Projectes\202210_GENE UTE SPD - QdC Seguiment Inversions estat\07. Document tècnic\Python\1.Pressupost\3. Sector publico administrativo\Agrupación
+# Aquí determinamos el metodo GET de la URL /Agr_SP_Admin
+@app.route('/Agr_SP_Admin', methods=['GET'])
+def Agr_SP_Admin_script():
+
+    # creem les llistes buides i descarreguem fitxer
+    llista= descarga_blob('Resum_SP_Admin.CSV')
+    llistafinal=[]
+
+    # Afegim la capcelera a la llista
+    header=['COMUNITAT AUTONOMA', 'ANY_ANTERIOR', 'ANY_ACTUAL', 'ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
+    llistafinal.append(header)
+    
+    # Afegim els registres interessants a la llista
+    for i in range(6, 23):
+        llistafinal.append(llista[i])
+    
+    
+    anyo = llista[2][0].split(' ')[1]
+    
+    upload_file = anyo + '_PRES_FACT_AGR_CCAA_SP_ADMIN.csv'
+    subida_blob(upload_file,llistafinal)
+    
+    return 'Blob Agr_SP_Admin subido'
+    
+
+
+
+
+
+# 1.3
+# Python original: 
+# G:\Unidades compartidas\Sector Públic BCN\01. Generalitat de Catalunya\07. PDA\01. Projectes\202210_GENE UTE SPD - QdC Seguiment Inversions estat\07. Document tècnic\Python\1.Pressupost\3. Sector publico administrativo\Detalle
+# Aquí determinamos el metodo GET de la URL /SP_Admin
+@app.route('/SP_Admin', methods=['GET'])
+def SP_Admin_script():
+
+   llista_origen = descarga_blob("Detall_SP_Admin.CSV")
+
+   llista_final = []
+   
+   comunitat = "CATALUÑA"
+   provincia = ""
+   entidad = ""
+   
+   for row in llista_origen:
+       if len(row) != 0 and "PROVINCIA" in row[0]:
+           provincia = row[0].split(" ")[8]
+       if len(row) > 2 and "ENTIDAD" in row[2]:
+           aux = row[2].split(":")
+           if len(aux) > 1:
+               entidad = aux[1]
+       if len(row) != 0 and row[0].isdigit():
+           toappend = []
+           toappend.extend([comunitat, provincia, entidad, row[0]])
+           toappend.extend(list(row[i] for i in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]))
+           llista_final.append(toappend)
+   
+   capcelera = ['COMUNITAT_AUTONOMA', 'PROVINCIA', 'ENTITAT', 'CODI PROJECTE', 'DENOMINACIO', 'COST TOTAL', 'INICI', 'FI','TIPUS', 'ANY_ANTERIOR', 'ANY_ACTUAL', 'ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
+   
+   llista_final.insert(0, capcelera)
+   
+   
+   anyo = llista_origen[4][0].split(' ')[4]    
+    
+   upload_file	= anyo + "_PRES_FACT_DET_SP_ADMIN.csv"
+   subida_blob(upload_file,llista_final)
+      
+   return 'Blob SP_Admin subido'
+
+
+
+
 # Iniciamos nuestra app
 if __name__ == '__main__':
    app.run()
