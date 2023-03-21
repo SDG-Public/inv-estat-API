@@ -435,7 +435,7 @@ def SP_Admin_script():
       
    return 'Blob SP_Admin subido'
 
-"""
+
 
 # 1.4
 # Python original: 
@@ -509,7 +509,7 @@ def Detall_SP_Empresarial_script():
     return 'Blob Detall SP Empresarial'        
             
         
-        
+"""     
 # 1.5
 # Python original: 
 # G:\Unidades compartidas\Sector Públic BCN\01. Generalitat de Catalunya\07. PDA\01. Projectes\202210_GENE UTE SPD - QdC Seguiment Inversions estat\07. Document tècnic\Python\1.Pressupost\5. Seguretat Social

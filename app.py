@@ -386,7 +386,7 @@ def Agr_SP_Admin_script():
     for i in range(6, 23):
         item_to_append = llista[i]
         # Eliminamos la columna 6 que aparece vacia en el CSV
-        llistafinal.append(item_to_append[0:6])
+        llista_final.append(item_to_append[0:6])
     
     
     anyo = llista[2][0].split(' ')[1]
@@ -445,6 +445,81 @@ def SP_Admin_script():
    return 'Blob SP_Admin subido'
 
 
+
+
+
+
+# 1.4
+# Python original: 
+# G:\Unidades compartidas\Sector Públic BCN\01. Generalitat de Catalunya\07. PDA\01. Projectes\202210_GENE UTE SPD - QdC Seguiment Inversions estat\07. Document tècnic\Python\1.Pressupost\4. Sector publico empresarial\Agrupación
+# Aquí determinamos el metodo GET de la URL /Agr_SP_Empresarial
+@app.route('/Agr_SP_Empresarial', methods=['GET'])
+def Agr_SP_Empresarial_script():
+
+
+    # creem les llistes buides i descarreguem fitxers
+    llista= descarga_blob('Resum_SP_Emp.CSV')
+    llistafinal=[]
+
+    
+    # Afegim els registres interessants a la llista
+    for i in range(6, 25):
+        llistafinal.append(llista[i])
+    
+    # Afegim la capcelera a la llista
+    header=['COMUNITATS AUTONOMES', 'ANY_ANTERIOR', 'ANY_ACTUAL', 'ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
+    llistafinal.insert(0, header)
+    
+    anyo = llista[0][0].split(' ')[1]
+    
+    upload_file	= anyo + '_PRES_FACT_AGR_SP_EMPR.csv'
+    subida_blob(upload_file,llista_final)
+    
+    return 'Blob Agr SP Empresarial'
+
+    
+
+# 1.4
+# Python original: 
+# G:\Unidades compartidas\Sector Públic BCN\01. Generalitat de Catalunya\07. PDA\01. Projectes\202210_GENE UTE SPD - QdC Seguiment Inversions estat\07. Document tècnic\Python\1.Pressupost\4. Sector publico empresarial\Detalle
+# Aquí determinamos el metodo GET de la URL /Detall_SP_Empresarial
+@app.route('/Detall_SP_Empresarial', methods=['GET'])
+def Detall_SP_Empresarial_script():
+
+    
+    llista_origen = descarga_blob('Detall_SP_Emp.CSV')
+
+    llista_final = []
+    
+    comunitat = "CATALUÑA"
+    provincia = ''
+    entidad = ''
+    
+    for row in llista_origen:
+        if len(row) != 0 and "PROVINCIA" in row[0]:
+            provincia = row[0].split(" ")[8]
+        if len(row) > 2 and "ENTIDAD" in row[2]:
+            aux = row[2].split(":")
+            if len(aux) > 1:
+                entidad = aux[1]
+        if len(row) != 0 and row[0].isdigit():
+            toappend = []
+            toappend.extend([comunitat, provincia, entidad, row[0]])
+            toappend.extend(list(row[i] for i in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]))
+            llista_final.append(toappend)
+    
+    capcelera = ['COMUNITAT_AUTONOMA', 'PROVINCIA', 'ENTITAT', 'CODI PROJECTE', 'DENOMINACIO', 'COST TOTAL', 'INICI', 'FI',
+                'TIPUS', 'ANY_ANTERIOR', 'ANY_ACTUAL', 'ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
+    
+    llista_final.insert(0, capcelera)
+    
+    anyo = llista_origen[0][0].split(' ')[4]
+    
+    upload_file	= anyo + '_PRES_FACT_DET_SP_EMPR.csv'
+    subida_blob(upload_file,llista_final)
+
+    return 'Blob Detall SP Empresarial'        
+    
 
 
 # Iniciamos nuestra app
