@@ -15,6 +15,15 @@ connectionString = os.environ['CUSTOMCONNSTR_storage']
 containerName = "inversionsestat"
 
 
+# Parametros de conexión a SharePoint
+baseurl = 'https://gencat.sharepoint.com'
+basesite = '/sites/Provespython' 
+relative_file_path = f'/sites/Provespython/Shared Documents/'
+siteurl = baseurl + basesite
+username = os.environ['CUSTOMCONNSTR_username'] #config.username
+pwd = os.environ['CUSTOMCONNSTR_password'] #config.password
+
+
 def descarga_blob(download_file):
    # Nos conectamos al Blob Storage
    blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=download_file)
@@ -51,15 +60,26 @@ def descarga_excel(download_file,posicions_excel):
        
    return df
 
-def subida_blob(upload_file,llista_final):
+def subida_blob(upload_file_name,llista_final):
    # Creamos una conexión con un nuevo nombre de destino
-   blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=upload_file)  
+   blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName, blob_name=upload_file_name)  
    
    # Cargamos los datos a un dataframe
    df = pd.DataFrame(llista_final[1:],columns = llista_final[0])
    data = df.to_csv(index=False,sep=";")
    # Los subimos a Blob Storage
    blob.upload_blob(data,overwrite=True)
+   
+   # Y también a SharePoint:
+   
+   #Creamos la conexión primero:
+   ctx_auth = AuthenticationContext(siteurl) # should also be the siteurl
+   ctx_auth.acquire_token_for_user(username, pwd)
+   ctx = ClientContext(siteurl, ctx_auth) # make sure you auth to the siteurl.
+   
+   # Y subimos el fichero
+   target_folder = ctx.web.get_folder_by_server_relative_url(relative_file_path)
+   target_folder.upload_file(upload_file_name, data).execute_query()
    
 
 def individual(llista,llista_final):
@@ -138,6 +158,7 @@ def individual_SS(llista,llistafinal,provincia,llistaentitat):
             llistafinal.append(toappend)
     return llistafinal
 
+
 app = Flask(__name__)
 
 # Este controla la pagina inicial de nuestra Web App
@@ -149,15 +170,6 @@ def index():
 # Descargamos los ficheros del SharePoint
 @app.route('/download', methods=['GET'])
 def download_files():
-
-   # Parametros de conexión a SharePoint
-   baseurl = 'https://gencat.sharepoint.com'
-   basesite = '/sites/Provespython' 
-   siteurl = baseurl + basesite
-   relative_url = f'Shared Documents/'
-
-   username = os.environ['CUSTOMCONNSTR_username'] #config.username
-   pwd = os.environ['CUSTOMCONNSTR_password'] #config.password
    
    ctx_auth = AuthenticationContext(siteurl) # should also be the siteurl
    ctx_auth.acquire_token_for_user(username, pwd)
@@ -169,12 +181,10 @@ def download_files():
    for fichero in lista_ficheros: 
 
       # Bajada y subida de fichero
-      relative_file_path = f'/sites/Provespython/Shared Documents/'
       down_file_path = relative_file_path + fichero
       
       # Creamos una conexión con un nuevo nombre de destino
-      blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName,
-                                            blob_name=fichero)
+      blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName,blob_name=fichero)
       
       response = File.open_binary(ctx, down_file_path)
       blob.upload_blob(response.content, overwrite=True)
