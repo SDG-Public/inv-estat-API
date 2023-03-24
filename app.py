@@ -640,7 +640,7 @@ def SS_script():
     llistafinal = individual_SS(llista_LLEIDA,llistafinal,'LLEIDA',llistaentitat)
     llistafinal = individual_SS(llista_GIR,llistafinal,'GIRONA',llistaentitat)
     
-    upload_file	= currentYear + "_PRES_FACT_DET_SEGURETAT_SOCIAL.csv"
+    upload_file	= str(currentYear) + "_PRES_FACT_DET_SEGURETAT_SOCIAL.csv"
     subida_blob(upload_file,llistafinal)
 
     upload_file	= "DIM_DET_SEGURETAT_SOCIAL_ENTITATS.csv"
