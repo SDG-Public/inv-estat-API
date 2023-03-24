@@ -159,6 +159,7 @@ def individual_SS(llista,llistafinal,provincia,llistaentitat):
     return llistafinal
 
 
+
 app = Flask(__name__)
 
 # Este controla la pagina inicial de nuestra Web App
@@ -193,6 +194,33 @@ def download_files():
    return "Archivos descargados correctamente"
 
 
+
+
+
+# Descargamos los ficheros del SharePoint
+@app.route('/monthly_download', methods=['GET'])
+def monthly_download_script():
+   
+   ctx_auth = AuthenticationContext(siteurl) # should also be the siteurl
+   ctx_auth.acquire_token_for_user(username, pwd)
+   ctx = ClientContext(siteurl, ctx_auth) # make sure you auth to the siteurl.
+    
+   currentMonth = datetime.now().strftime('%m')
+   currentYear = datetime.now().year 
+    
+   fichero = str(currentYear) + "_" + currentMonth + "_LIA_FACT.xlsx" 
+
+   # Bajada y subida de fichero
+   down_file_path = relative_file_path + fichero
+   
+   # Creamos una conexión con un nuevo nombre de destino
+   blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName,blob_name=fichero)
+   
+   response = File.open_binary(ctx, down_file_path)
+   blob.upload_blob(response.content, overwrite=True)
+                                         
+   
+   return "Archivos descargados correctamente"
 
 
 # 1.1
@@ -270,7 +298,7 @@ def CCAA_Ministeris_script():
    capcelera = ['MINISTERI', 'COMUNIDAD AUTONOMA', 'COST TOTAL']
    llista_final.insert(0, capcelera)
    
-   upload_file = anyo + '_PRES_FACT_AGR_MIN_EST_OOAA_RE.csv'
+   upload_file = anyo + '_PRES_FACT_AGR_CCAA_MIN_EST_OOAA_RE.csv'
    subida_blob(upload_file,llista_final)
    
    return 'Blob CCAA_Ministeris subido'
@@ -317,7 +345,7 @@ def Estado_org_script():
     
     anyo = llista_108[5][1].split(' ')[2]
 
-    upload_file = anyo + '_PRES_FACT_AGR_MIN_EST_OOAA_RE.csv'
+    upload_file = anyo + '_PRES_FACT_DET_EST_OOAA_RE.csv'
     subida_blob(upload_file,llista_final)
     
     return 'Blob Estado Org subido'
@@ -592,7 +620,7 @@ def Detall_SP_Empresarial_script():
 @app.route('/SS', methods=['GET'])
 def SS_script():
 
-
+    currentYear = datetime.now().year
     llistafinal = []
     llistaentitat = []
     llista_BCN = descarga_blob('SS_BCN.csv')
@@ -612,7 +640,7 @@ def SS_script():
     llistafinal = individual_SS(llista_LLEIDA,llistafinal,'LLEIDA',llistaentitat)
     llistafinal = individual_SS(llista_GIR,llistafinal,'GIRONA',llistaentitat)
     
-    upload_file	= "PRES_FACT_DET_SEGURETAT_SOCIAL.csv"
+    upload_file	= currentYear + "_PRES_FACT_DET_SEGURETAT_SOCIAL.csv"
     subida_blob(upload_file,llistafinal)
 
     upload_file	= "DIM_DET_SEGURETAT_SOCIAL_ENTITATS.csv"
@@ -695,7 +723,7 @@ def Pressupostaria_script():
     
     llista_CCAA0.insert(0, capcelera_CCAA)
     
-    upload_file	= "EXEC_FACT_AGR_CCAA_AGE.csv"
+    upload_file	= anyo + "_EXEC_FACT_AGR_CCAA_AGE.csv"
     subida_blob(upload_file,llista_CCAA0)
 
     
@@ -718,7 +746,7 @@ def Pressupostaria_script():
     
     llista_CCAA2.insert(0, capcelera_CCAA)
 
-    upload_file	= "EXEC_FACT_AGR_CCAA_OOAA_RE.csv"
+    upload_file	= anyo + "_EXEC_FACT_AGR_CCAA_OOAA_RE.csv"
     subida_blob(upload_file,llista_CCAA2)
     
     # Per CCAA 4
@@ -740,7 +768,7 @@ def Pressupostaria_script():
     
     llista_CCAA4.insert(0, capcelera_CCAA2)
 
-    upload_file	= "EXEC_FACT_AGR_CCAA_SP_ADMIN.csv"
+    upload_file	= anyo + "_EXEC_FACT_AGR_CCAA_SP_ADMIN.csv"
     subida_blob(upload_file,llista_CCAA4)
         
     
@@ -763,7 +791,7 @@ def Pressupostaria_script():
     
     llista_CCAA6.insert(0, capcelera_CCAA2)
 
-    upload_file	= "EXEC_FACT_AGR_CCAA_SP_EMPR.csv"
+    upload_file	= anyo + "_EXEC_FACT_AGR_CCAA_SP_EMPR.csv"
     subida_blob(upload_file,llista_CCAA6)
    
     
@@ -789,7 +817,7 @@ def Pressupostaria_script():
     
     llista_CAT1.insert(0, capcelera_CAT1)
 
-    upload_file	= "EXE_FACT_DET_AGE.csv"
+    upload_file	= anyo + "_EXEC_FACT_DET_AGE.csv"
     subida_blob(upload_file,llista_CAT1)
 
     
@@ -815,7 +843,7 @@ def Pressupostaria_script():
     
     llista_CAT3.insert(0, capcelera_CAT3)
     
-    upload_file	= "EXE_FACT_DET_OOAA_RE.csv"
+    upload_file	= anyo + "_EXEC_FACT_DET_OOAA_RE.csv"
     subida_blob(upload_file,llista_CAT3)
 
     
@@ -839,7 +867,7 @@ def Pressupostaria_script():
     
     llista_CAT5.insert(0, capcelera_CAT5)
 
-    upload_file	= "EXE_FACT_DET_SP_ADMIN.csv"
+    upload_file	= anyo + "_EXEC_FACT_DET_SP_ADMIN.csv"
     subida_blob(upload_file,llista_CAT5)
     
     # Per CAT 7
@@ -862,7 +890,7 @@ def Pressupostaria_script():
     
     llista_CAT7.insert(0, capcelera_CAT7)
     
-    upload_file	= anyo + "_EXE_FACT_DET_SP_EMPR.csv"
+    upload_file	= anyo + "_EXEC_FACT_DET_SP_EMPR.csv"
     subida_blob(upload_file,llista_CAT7)
 
     return 'Blobs pressupostaries subidas'
