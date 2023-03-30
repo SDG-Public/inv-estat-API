@@ -562,7 +562,7 @@ def Agr_SP_Empresarial_script():
     
     anyo = llista[0][0].split(' ')[1]
     
-    upload_file	= anyo + '_PRES_FACT_AGR_SP_EMPR.csv'
+    upload_file	= anyo + '_PRES_FACT_AGR_CCAA_SP_EMPR.csv'
     subida_blob(upload_file,llistafinal)
     
     return 'Blob Agr SP Empresarial'
@@ -824,7 +824,8 @@ def Pressupostaria_script():
     # Per CAT 3
     
     llista_CAT3 = []
-    capcelera_CAT3 = ['Codi Presupostari Organisme', 'Denominació', 'Crèdit Inicial', 'Obligacions Reconegudes', '%']
+    #capcelera_CAT3 = ['Codi Presupostari Organisme', 'Denominació', 'Crèdit Inicial', 'Obligacions Reconegudes', '%']
+    capcelera_CAT3 = ['Codi Secció', 'Crèdit Inicial', 'Obligacions Reconegudes', '%']
     x = 7
     
     for row in lcat3:
@@ -849,7 +850,7 @@ def Pressupostaria_script():
     
     # Per CAT 5
     llista_CAT5 = []
-    capcelera_CAT5 = ['Entitat', 'Inversió Inicial', 'Inversió Real', '%']
+    capcelera_CAT5 = ['Entitat', 'Inversio Inicial', 'Inversió Real', '%']
     x = 7
     
     for row in lcat5:
