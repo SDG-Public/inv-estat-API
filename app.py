@@ -620,7 +620,7 @@ def Detall_SP_Empresarial_script():
 @app.route('/SS', methods=['GET'])
 def SS_script():
 
-    currentYear = datetime.now().year
+    lastYear = datetime.now().year - 1
     llistafinal = []
     llistaentitat = []
     llista_BCN = descarga_blob('SS_BCN.csv')
@@ -640,7 +640,7 @@ def SS_script():
     llistafinal = individual_SS(llista_LLEIDA,llistafinal,'LLEIDA',llistaentitat)
     llistafinal = individual_SS(llista_GIR,llistafinal,'GIRONA',llistaentitat)
     
-    upload_file	= str(currentYear) + "_PRES_FACT_DET_SEGURETAT_SOCIAL.csv"
+    upload_file	= str(lastYear) + "_PRES_FACT_DET_SEGURETAT_SOCIAL.csv"
     subida_blob(upload_file,llistafinal)
 
     upload_file	= "DIM_DET_SEGURETAT_SOCIAL_ENTITATS.csv"
@@ -850,7 +850,7 @@ def Pressupostaria_script():
     
     # Per CAT 5
     llista_CAT5 = []
-    capcelera_CAT5 = ['Entitat', 'Inversio Inicial', 'Inversió Real', '%']
+    capcelera_CAT5 = ['Entitat', 'Inversio Inicial', 'Inversio Real', '%']
     x = 7
     
     for row in lcat5:
