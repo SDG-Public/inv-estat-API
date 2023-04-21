@@ -623,10 +623,10 @@ def SS_script():
     lastYear = datetime.now().year - 1
     llistafinal = []
     llistaentitat = []
-    llista_BCN = descarga_blob('SS_BCN.csv')
-    llista_TGN = descarga_blob('SS_TGN.csv')
-    llista_LLEIDA = descarga_blob('SS_LLEIDA.csv')
-    llista_GIR = descarga_blob('SS_GIR.csv')
+    llista_BCN = descarga_blob('SS_BCN.CSV')
+    llista_TGN = descarga_blob('SS_TGN.CSV')
+    llista_LLEIDA = descarga_blob('SS_LLEIDA.CSV')
+    llista_GIR = descarga_blob('SS_GIR.CSV')
     
     header = ['Organisme', 'Programa', 'Article', 'Centre Tipus', 'Número', 'Denominació', 'Inici', 'Final','Import Total', 'ANY', 'ANY+1', 'ANY+2', 'ANY+3', 'Província', 'ID Entitat']
     
