@@ -834,11 +834,11 @@ def Pressupostaria_script():
                 break
             elif lcat3[x][1] > 0:
                 ID_SECCIO = lcat3[x][1]
-                denominacio = lcat3[x][2]
+                #denominacio = lcat3[x][2]
                 Credit_Ini = lcat3[x][3]
-                Credit_Fi = lcat3[x][4]
+                obligacions = lcat3[x][4]
                 Perc = 100 * lcat3[x][5]
-                fila = [str(ID_SECCIO), str(denominacio), str(Credit_Ini), str(Credit_Fi), str(Perc)]
+                fila = [str(ID_SECCIO), str(Credit_Ini), str(obligacions), str(Perc)]
                 llista_CAT3.append(fila)
         x = x+1
     
