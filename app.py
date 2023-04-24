@@ -620,7 +620,7 @@ def Detall_SP_Empresarial_script():
 @app.route('/SS', methods=['GET'])
 def SS_script():
 
-    lastYear = datetime.now().year - 1
+    lastYear = datetime.now().year
     llistafinal = []
     llistaentitat = []
     llista_BCN = descarga_blob('SS_BCN.CSV')
