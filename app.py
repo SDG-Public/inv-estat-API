@@ -34,11 +34,11 @@ def descarga_blob(download_file):
    datos = download_stream.readall()
    
    # Decodificamos los datos ANSI (cp1252)
-    try:
-        str_datos = datos.decode('cp1252')
+   try:
+      str_datos = datos.decode('cp1252')
     #Decodificamos los datos UTF8 si el otro encoding falla
-    except:
-        str_datos = datos.decode('utf8')
+   except:
+      str_datos = datos.decode('utf8')
    
    # Eliminamos salos de linea que pueda haber entre comillas
    pattern = re.compile(r'".*?"', re.DOTALL)
