@@ -180,10 +180,10 @@ def lista_sharepoint(prefix = None, suffix = None):
    for file in files:
       file_name = file.properties["Name"]
       if prefix is not None:
-         if file_name[:len(prefix)] = prefix:
+         if file_name[:len(prefix)] == prefix:
             file_list.append(file_name)
       else:
-         if file_name[-len(suffix):] = suffix:
+         if file_name[-len(suffix):] == suffix:
             file_list.append(file_name)         
             
    return file_list
