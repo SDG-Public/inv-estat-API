@@ -18,8 +18,9 @@ containerName = "inversionsestat"
 # Parametros de conexión a SharePoint
 baseurl = 'https://gencat.sharepoint.com'
 basesite = '/sites/Provespython' 
-relative_file_path = f'/sites/Provespython/Shared Documents/'
 siteurl = baseurl + basesite
+relative_file_path = f'/sites/Provespython/Shared Documents/'
+relative_file_path_no_slash =  relative_file_path[:-2]
 username = os.environ['CUSTOMCONNSTR_username'] #config.username
 pwd = os.environ['CUSTOMCONNSTR_password'] #config.password
 
@@ -33,7 +34,11 @@ def descarga_blob(download_file):
    datos = download_stream.readall()
    
    # Decodificamos los datos ANSI (cp1252)
-   str_datos = datos.decode('cp1252')
+    try:
+        str_datos = datos.decode('cp1252')
+    #Decodificamos los datos UTF8 si el otro encoding falla
+    except:
+        str_datos = datos.decode('utf8')
    
    # Eliminamos salos de linea que pueda haber entre comillas
    pattern = re.compile(r'".*?"', re.DOTALL)
@@ -159,6 +164,46 @@ def individual_SS(llista,llistafinal,provincia,llistaentitat):
     return llistafinal
 
 
+def lista_sharepoint(prefix = None, suffix = None):
+   ctx_auth = AuthenticationContext(siteurl) # should also be the siteurl
+   ctx_auth.acquire_token_for_user(username, pwd)
+   ctx = ClientContext(siteurl, ctx_auth) # make sure you auth to the siteurl.
+   
+   libraryRoot = ctx.web.get_folder_by_server_relative_path(relative_file_path_no_slash)
+   
+   files = libraryRoot.files
+   ctx.load(files)
+   ctx.execure_query()
+   
+   file_list = []
+   
+   for file in files:
+      file_name = file.properties["Name"]
+      if prefix is not None:
+         if file_name[:len(prefix)] = prefix:
+            file_list.append(file_name)
+      else:
+         if file_name[-len(suffix):] = suffix:
+            file_list.append(file_name)         
+            
+   return file_list
+
+def descarga_lista_sharepoint(lista_ficheros):
+   ctx_auth = AuthenticationContext(siteurl) # should also be the siteurl
+   ctx_auth.acquire_token_for_user(username, pwd)
+   ctx = ClientContext(siteurl, ctx_auth) # make sure you auth to the siteurl.
+
+   for fichero in lista_ficheros: 
+      # Bajada y subida de fichero
+      down_file_path = relative_file_path + fichero
+      
+      # Creamos una conexión con un nuevo nombre de destino
+      blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName,blob_name=fichero)
+      
+      response = File.open_binary(ctx, down_file_path)
+      blob.upload_blob(response.content, overwrite=True)
+
+   
 
 app = Flask(__name__)
 
@@ -171,26 +216,12 @@ def index():
 # Descargamos los ficheros del SharePoint
 @app.route('/download', methods=['GET'])
 def download_files():
-   
-   ctx_auth = AuthenticationContext(siteurl) # should also be the siteurl
-   ctx_auth.acquire_token_for_user(username, pwd)
-   ctx = ClientContext(siteurl, ctx_auth) # make sure you auth to the siteurl.
 
    with open(os.path.join(app.root_path, 'lista_ficheros.lst'),'r') as f:
       lista_ficheros = f.read().splitlines()
     
-   for fichero in lista_ficheros: 
-
-      # Bajada y subida de fichero
-      down_file_path = relative_file_path + fichero
-      
-      # Creamos una conexión con un nuevo nombre de destino
-      blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName,blob_name=fichero)
-      
-      response = File.open_binary(ctx, down_file_path)
-      blob.upload_blob(response.content, overwrite=True)
-                                         
-   
+   descarga_lista_sharepoint(lista_ficheros)
+  
    return "Archivos descargados correctamente"
 
 
@@ -309,43 +340,51 @@ def CCAA_Ministeris_script():
 # Python original: 
 # G:\Unidades compartidas\Sector Públic BCN\01. Generalitat de Catalunya\07. PDA\01. Projectes\202210_GENE UTE SPD - QdC Seguiment Inversions estat\07. Document tècnic\Python\1.Pressupost\1. Estado, Organismos\Detalle
 # Aquí determinamos el metodo GET de la URL /Estado_org
-@app.route('/Estado_org', methods=['GET'])
+@app.route('/Estado_org/<int:Estado_year>', methods=['GET'])
 def Estado_org_script():
+    
+    #Nos quedamos con los últimos digitos del año
+    year_YY = Estado_year - 2000
+    
 
-    llista_108 = descarga_blob('N_22_E_V_2_R_1_202_1_108_1.CSV')
-    llista_114 = descarga_blob('N_22_E_V_2_R_1_202_1_114_1.CSV')
-    llista_115 = descarga_blob('N_22_E_V_2_R_1_202_1_115_1.CSV')
-    llista_116 = descarga_blob('N_22_E_V_2_R_1_202_1_116_1.CSV')
-    llista_117 = descarga_blob('N_22_E_V_2_R_1_202_1_117_1.CSV')
-    #llista_118 = descarga_blob('N_22_E_V_2_R_1_202_1_118_1.CSV')
-    llista_119 = descarga_blob('N_22_E_V_2_R_1_202_1_119_1.CSV')
-    llista_120 = descarga_blob('N_22_E_V_2_R_1_202_1_120_1.CSV')
-    llista_123 = descarga_blob('N_22_E_V_2_R_1_202_1_123_1.CSV')
-    llista_124 = descarga_blob('N_22_E_V_2_R_1_202_1_124_1.CSV')
-    llista_128 = descarga_blob('N_22_E_V_2_R_1_202_1_128_1.CSV')
+    #Descargamos los ficheros que empiezan por N_YY
+    prefix = 'N_'+str(year_YY)
+    lista_ficheros = lista_sharepoint(prefix)
+    descarga_lista_sharepoint(lista_ficheros)
+    
     llista_final = []
-
-
+    for file in lista_ficheros:
+       fitxer_content = descarga_blob(file)
+       llista_final = individual(fitxer_content,llista_final)
     
-    llista_final = individual(llista_108,llista_final)
-    llista_final = individual(llista_114,llista_final)
-    llista_final = individual(llista_115,llista_final)
-    llista_final = individual(llista_116,llista_final)
-    llista_final = individual(llista_117,llista_final)
-    llista_final = individual(llista_119,llista_final)
-    llista_final = individual(llista_120,llista_final)
-    llista_final = individual(llista_123,llista_final)
-    llista_final = individual(llista_124,llista_final)
-    llista_final = individual(llista_128,llista_final)
-    
+    #llista_108 = descarga_blob('N_22_E_V_2_R_1_202_1_108_1.CSV')
+    #llista_114 = descarga_blob('N_22_E_V_2_R_1_202_1_114_1.CSV')
+    #llista_115 = descarga_blob('N_22_E_V_2_R_1_202_1_115_1.CSV')
+    #llista_116 = descarga_blob('N_22_E_V_2_R_1_202_1_116_1.CSV')
+    #llista_117 = descarga_blob('N_22_E_V_2_R_1_202_1_117_1.CSV')
+    #llista_119 = descarga_blob('N_22_E_V_2_R_1_202_1_119_1.CSV')
+    #llista_120 = descarga_blob('N_22_E_V_2_R_1_202_1_120_1.CSV')
+    #llista_123 = descarga_blob('N_22_E_V_2_R_1_202_1_123_1.CSV')
+    #llista_124 = descarga_blob('N_22_E_V_2_R_1_202_1_124_1.CSV')
+    #llista_128 = descarga_blob('N_22_E_V_2_R_1_202_1_128_1.CSV')
+ 
+    #llista_final = individual(llista_108,llista_final)
+    #llista_final = individual(llista_114,llista_final)
+    #llista_final = individual(llista_115,llista_final)
+    #llista_final = individual(llista_116,llista_final)
+    #llista_final = individual(llista_117,llista_final)
+    #llista_final = individual(llista_119,llista_final)
+    #llista_final = individual(llista_120,llista_final)
+    #llista_final = individual(llista_123,llista_final)
+    #llista_final = individual(llista_124,llista_final)
+    #llista_final = individual(llista_128,llista_final)
+    #anyo = llista_108[5][1].split(' ')[2]
     
     capcelera = ['ID_MINISTERI','DESC_MINISTERI' ,'COMUNITAT_AUTONOMA', 'CODI_CENTRE','ID_PROGRAMA', 'ID_ARTICLE','DESC_CENTRE','ID_PROJECTE', 'NOM_PROJECTE','ANY_INICI', 'ANY_FI', 'PROVINCIA', 'TIPUS', 'COST_TOTAL', 'ANY_ANTERIOR', 'ANY_ACTUAL','ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
     
     llista_final.insert(0, capcelera)
-    
-    anyo = llista_108[5][1].split(' ')[2]
 
-    upload_file = anyo + '_PRES_FACT_DET_EST_OOAA_RE.csv'
+    upload_file = Estado_year + '_PRES_FACT_DET_EST_OOAA_RE.csv'
     subida_blob(upload_file,llista_final)
     
     return 'Blob Estado Org subido'
@@ -617,10 +656,10 @@ def Detall_SP_Empresarial_script():
 # Python original: 
 # G:\Unidades compartidas\Sector Públic BCN\01. Generalitat de Catalunya\07. PDA\01. Projectes\202210_GENE UTE SPD - QdC Seguiment Inversions estat\07. Document tècnic\Python\1.Pressupost\5. Seguretat Social
 # Aquí determinamos el metodo GET de la URL /SS
-@app.route('/SS', methods=['GET'])
-def SS_script():
+@app.route('/SS/<int:SS_year>', methods=['GET'])
+def SS_script(SS_year: int):
 
-    lastYear = datetime.now().year
+    #lastYear = datetime.now().year
     llistafinal = []
     llistaentitat = []
     llista_BCN = descarga_blob('SS_BCN.CSV')
@@ -640,7 +679,7 @@ def SS_script():
     llistafinal = individual_SS(llista_LLEIDA,llistafinal,'LLEIDA',llistaentitat)
     llistafinal = individual_SS(llista_GIR,llistafinal,'GIRONA',llistaentitat)
     
-    upload_file	= str(lastYear) + "_PRES_FACT_DET_SEGURETAT_SOCIAL.csv"
+    upload_file	= str(SS_year) + "_PRES_FACT_DET_SEGURETAT_SOCIAL.csv"
     subida_blob(upload_file,llistafinal)
 
     upload_file	= "DIM_DET_SEGURETAT_SOCIAL_ENTITATS.csv"
