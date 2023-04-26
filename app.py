@@ -379,7 +379,7 @@ def Estado_org_script(Estado_year: int):
     
     llista_final.insert(0, capcelera)
 
-    upload_file = Estado_year + '_PRES_FACT_DET_EST_OOAA_RE.csv'
+    upload_file = str(Estado_year) + '_PRES_FACT_DET_EST_OOAA_RE.csv'
     subida_blob(upload_file,llista_final)
     
     return 'Blob Estado Org subido'
