@@ -17,9 +17,9 @@ containerName = "inversionsestat"
 
 # Parametros de conexión a SharePoint
 baseurl = 'https://gencat.sharepoint.com'
-basesite = '/sites/Provespython' 
+basesite = '/sites/ProvespythonInvEstat' 
 siteurl = baseurl + basesite
-relative_file_path = f'/sites/Provespython/Shared Documents/'
+relative_file_path = f'/sites/ProvespythonInvEstat/Shared Documents/'
 relative_file_path_no_slash =  relative_file_path[:-2]
 username = os.environ['CUSTOMCONNSTR_username'] #config.username
 pwd = os.environ['CUSTOMCONNSTR_password'] #config.password
