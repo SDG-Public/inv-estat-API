@@ -268,16 +268,16 @@ def CCAA_Ministeris_script():
    csv_origen = descarga_blob('Resum_Ministeris.CSV')
    
    # Obrim el fitxer i introduïm registres
-    flag_for = 0
-    for row in csv_origen:
-        # Empezamos a cargar desde el primer registro con la primera columna no nula
-        if row[0] != '':
-            flag_for = 1
-        # Cargamos registros con longitud > 1 cuya segunda columna no esté vacia
-        if flag_for == 1 and len(row) > 1:
-            if row[1] != '':
-               llista_origen.append(row)
-               
+   flag_for = 0
+   for row in csv_origen:
+       # Empezamos a cargar desde el primer registro con la primera columna no nula
+       if row[0] != '':
+           flag_for = 1
+       # Cargamos registros con longitud > 1 cuya segunda columna no esté vacia
+       if flag_for == 1 and len(row) > 1:
+           if row[1] != '':
+              llista_origen.append(row)
+              
    for row in csv_origen:
        llista_any.append(row)
    
