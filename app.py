@@ -173,7 +173,7 @@ def lista_sharepoint(prefix = None, suffix = None):
    
    files = libraryRoot.files
    ctx.load(files)
-   ctx.execure_query()
+   ctx.execute_query()
    
    file_list = []
    
