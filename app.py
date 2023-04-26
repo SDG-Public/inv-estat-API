@@ -268,11 +268,16 @@ def CCAA_Ministeris_script():
    csv_origen = descarga_blob('Resum_Ministeris.CSV')
    
    # Obrim el fitxer i introduïm registres
-
-   for x,row in enumerate(csv_origen):
-       if 6 < x < 83:
-           llista_origen.append(row)
-
+    flag_for = 0
+    for row in csv_origen:
+        # Empezamos a cargar desde el primer registro con la primera columna no nula
+        if row[0] != '':
+            flag_for = 1
+        # Cargamos registros con longitud > 1 cuya segunda columna no esté vacia
+        if flag_for == 1 and len(row) > 1:
+            if row[1] != '':
+               llista_origen.append(row)
+               
    for row in csv_origen:
        llista_any.append(row)
    
@@ -280,20 +285,15 @@ def CCAA_Ministeris_script():
    anyo = llista_any[3][1].split(' ')[2]
    
    # Creem una llista amb els ministeris - seccions
-   llista_seccions = llista_origen[0]
-   llista_seccions.pop(0)
-   llista_seccions.remove('')
-   llista_seccions.remove('Total')
-   llista_seccions.pop(31)
-   llista_seccions.pop(30)
-   llista_seccions.pop(29)
+   for x,item in enumerate(llista_origen[0]):
+      if x > 0 and item != '' and item != 'Total':
+         llista_seccions.append(item)
    
-   # Creem una llista amb les denominacions i els diners
-   
+   # Eliminem la primera fila
    llista_origen.pop(0)
    
-   # Traiem els identificadors
-   for x in range(75):
+   # Eliminem la primera columna
+   for x in range(len(llista_origen)):
        llista_origen[x].pop(0)
    
    # Llista CCAA per treure-les
@@ -302,8 +302,8 @@ def CCAA_Ministeris_script():
    llista_sense_CCAA = []
    
 
-   for x,row in enumerate(llista_origen):
-       if llista_origen[x][0] not in llista_CCAA:
+   for row in llista_origen:
+       if row[0] not in llista_CCAA:
            llista_sense_CCAA.append(row)
    
    # Ajuntem les llistes per tenir tota la info
@@ -315,15 +315,10 @@ def CCAA_Ministeris_script():
    # Creem un procés que iteri cada quadrat, n'extregui la info de la seva respectiva primera fila i columna i les posi en una llista de 3.
    
    llista_final = []
-   x = 0
-   y = 0
    
-   for x in range(1,23):
-       for y in range(1, 57):
-           print(x)
-           print(y)
+   for x in range(1,len(llista[0])):
+       for y in range(1, len(llista)):
            llista_tupla = [llista[0][x], llista[y][0], llista[y][x]]
-           print(llista_tupla)
            llista_final.append(llista_tupla)
    
    capcelera = ['MINISTERI', 'COMUNIDAD AUTONOMA', 'COST TOTAL']
@@ -510,16 +505,24 @@ def Agr_SP_Admin_script():
     llista_final.append(header)
     
     # Afegim els registres interessants a la llista
-    for i in range(6, 23):
-        item_to_append = llista[i]
+    flag_com = 0
+    for i,row in enumerate(llista):
+        if "PRESUPUESTO" in row[0]:
+            split_row = row[0].split(' ')       
+        # Paramos en la fila que contiene las palabras NO REGIONALIZABLE en la primera columna
+        if "NO REGIONALIZABLE" in row[0]:
+            flag_com = 0
         # Eliminamos la columna 6 que aparece vacia en el CSV
-        llista_final.append(item_to_append[0:6])
+        if flag_com == 1 and row[0] != '':
+            llista_final.append(row[:6])
+        #Empezamos a cargar despues de la fila que contiene las palabras "COMUNIDAD AUTÓNOMA"
+        if "COMUNIDAD AUTÓNOMA" in row[0]:
+            flag_com = 1
     
-    
-    anyo = llista[2][0].split(' ')[1]
-    
-    llista_final = llista_final[:][0:6]
-    print(llista_final)
+    for i,item in enumerate(split_row):
+        if item == 'PRESUPUESTO':
+            index_presu = i
+    anyo = split_row[index_presu+1]
     
     upload_file = anyo + '_PRES_FACT_AGR_CCAA_SP_ADMIN.csv'
     subida_blob(upload_file,llista_final)
@@ -548,7 +551,7 @@ def SP_Admin_script():
    
    for row in llista_origen:
        if len(row) != 0 and "PROVINCIA" in row[0]:
-           provincia = row[0].split(" ")[8]
+           provincia = row[0].split(" ")[-1]
        if len(row) > 2 and "ENTIDAD" in row[2]:
            aux = row[2].split(":")
            if len(aux) > 1:
@@ -563,8 +566,13 @@ def SP_Admin_script():
    
    llista_final.insert(0, capcelera)
    
-   
-   anyo = llista_origen[4][0].split(' ')[4]    
+   # Buscamos la palabra PARA
+   # Texto de ejemplo en esa fila: " ANEXO DE INVERSIONES REALES PARA 2023 Y PROGRAMACIÓN PLURIANUAL ANUALIZADA"
+   split_row_0 = llista_origen[0][0].split(' ')
+   for x,item in enumerate(split_row_0):
+      if item == 'PARA':
+         index_any = x+1
+   anyo = split_row_0[index_any]
     
    upload_file	= anyo + "_PRES_FACT_DET_SP_ADMIN.csv"
    subida_blob(upload_file,llista_final)
@@ -590,16 +598,30 @@ def Agr_SP_Empresarial_script():
 
     
     # Afegim els registres interessants a la llista
-    for i in range(6, 25):
-        item_to_append = llista[i]
-        # Eliminamos la columna 6 que aparece vacia en el CSV
-        llistafinal.append(item_to_append[0:6])
+    flag_comunidad = 0
+    for item in llista:
+        # Cuando encontremos la palabra "EXTRANJERO" paramos
+        if "EXTRANJERO" in item[0]:
+            flag_comunidad = 0       
+            
+        if flag_comunidad == 1 and item[0] != '':
+            llistafinal.append(item[:6])
+            
+        #Empezamos a cargar después de la fila que tenga las palabras "COMUNIDAD AUTÓNOMA"
+        if "COMUNIDAD AUTÓNOMA" in item[0]:
+            flag_comunidad = 1
+
     
     # Afegim la capcelera a la llista
     header=['COMUNITATS AUTONOMES', 'ANY_ANTERIOR', 'ANY_ACTUAL', 'ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
     llistafinal.insert(0, header)
     
-    anyo = llista[0][0].split(' ')[1]
+    # En la primera fila buscamos la palabra "PRESUPUESTO" y cogemos la siguiente palabra, que contiene el año
+    row_split = llista[0][0].split(' ')
+    for i,item in enumerate(row_split):
+        if item == 'PRESUPUESTO':
+            index_presu = i
+    anyo = row_split[index_presu+1]
     
     upload_file	= anyo + '_PRES_FACT_AGR_CCAA_SP_EMPR.csv'
     subida_blob(upload_file,llistafinal)
@@ -626,7 +648,7 @@ def Detall_SP_Empresarial_script():
     
     for row in llista_origen:
         if len(row) != 0 and "PROVINCIA" in row[0]:
-            provincia = row[0].split(" ")[8]
+            provincia = row[0].split(" ")[-1]
         if len(row) > 2 and "ENTIDAD" in row[2]:
             aux = row[2].split(":")
             if len(aux) > 1:
@@ -641,7 +663,12 @@ def Detall_SP_Empresarial_script():
     
     llista_final.insert(0, capcelera)
     
-    anyo = llista_origen[0][0].split(' ')[4]
+    # En la primera fila buscamos la palabra "ESTADO" y cogemos la siguiente palabra, que contiene el año
+    row_split = llista_origen[0][0].split(' ')
+    for i,item in enumerate(row_split):
+        if item == 'ESTADO':
+            index_estado = i
+    anyo = row_split[index_estado+1]
     
     upload_file	= anyo + '_PRES_FACT_DET_SP_EMPR.csv'
     subida_blob(upload_file,llista_final)
