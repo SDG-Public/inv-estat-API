@@ -336,7 +336,7 @@ def CCAA_Ministeris_script():
 # G:\Unidades compartidas\Sector Públic BCN\01. Generalitat de Catalunya\07. PDA\01. Projectes\202210_GENE UTE SPD - QdC Seguiment Inversions estat\07. Document tècnic\Python\1.Pressupost\1. Estado, Organismos\Detalle
 # Aquí determinamos el metodo GET de la URL /Estado_org
 @app.route('/Estado_org/<int:Estado_year>', methods=['GET'])
-def Estado_org_script():
+def Estado_org_script(Estado_year: int):
     
     #Nos quedamos con los últimos digitos del año
     year_YY = Estado_year - 2000
