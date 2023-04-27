@@ -864,7 +864,7 @@ def Pressupostaria_script():
     ######################### Per Catalunya ################################
     
     llista_CAT1 = []
-    capcelera_CAT1 = ['Codi Secció', 'Crèdit Inicial', 'Obligacions Reconegudes', '%']
+    capcelera_CAT1 = ['Codi Secció','Denominació', 'Crèdit Inicial', 'Obligacions Reconegudes', '%']
     x = 7
     
     for row in lcat1:
@@ -874,10 +874,11 @@ def Pressupostaria_script():
                 break
             else:
                 ID_SECCIO = lcat1[x][0]
+                Denom = lcat1[x][1]
                 Credit_Ini = lcat1[x][2]
                 Credit_Fi = lcat1[x][3]
                 Perc = 100 * lcat1[x][4]
-                fila = [str(ID_SECCIO), str(Credit_Ini), str(Credit_Fi), str(Perc)]
+                fila = [str(ID_SECCIO),str(Denom), str(Credit_Ini), str(Credit_Fi), str(Perc)]
                 llista_CAT1.append(fila)
         x = x+1
     
