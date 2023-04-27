@@ -556,7 +556,7 @@ def SP_Admin_script():
            aux = row[2].split(":")
            if len(aux) > 1:
                entidad = aux[1]
-       if len(row) != 0 and row[0].isdigit():
+       if len(row) != 0 and row[0].strip().isdigit():
            toappend = []
            toappend.extend([comunitat, provincia, entidad, row[0]])
            toappend.extend(list(row[i] for i in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]))
@@ -604,7 +604,7 @@ def Agr_SP_Empresarial_script():
         if "EXTRANJERO" in item[0]:
             flag_comunidad = 0       
             
-        if flag_comunidad == 1 and item[0] != '':
+        if flag_comunidad == 1 and item[0].strip() != '':
             llistafinal.append(item[:6])
             
         #Empezamos a cargar después de la fila que tenga las palabras "COMUNIDAD AUTÓNOMA"
@@ -653,7 +653,7 @@ def Detall_SP_Empresarial_script():
             aux = row[2].split(":")
             if len(aux) > 1:
                 entidad = aux[1]
-        if len(row) != 0 and row[0].isdigit():
+        if len(row) != 0 and row[0].strip().isdigit():
             toappend = []
             toappend.extend([comunitat, provincia, entidad, row[0]])
             toappend.extend(list(row[i] for i in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]))
