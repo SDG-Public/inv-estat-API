@@ -892,7 +892,7 @@ def Pressupostaria_script():
     
     llista_CAT3 = []
     #capcelera_CAT3 = ['Codi Presupostari Organisme', 'Denominació', 'Crèdit Inicial', 'Obligacions Reconegudes', '%']
-    capcelera_CAT3 = ['Codi Secció', 'Crèdit Inicial', 'Obligacions Reconegudes', '%']
+    capcelera_CAT3 = ['Codi Secció','Denominació', 'Crèdit Inicial', 'Obligacions Reconegudes', '%']
     x = 7
     
     for row in lcat3:
@@ -901,11 +901,11 @@ def Pressupostaria_script():
                 break
             elif lcat3[x][1] > 0:
                 ID_SECCIO = lcat3[x][1]
-                #denominacio = lcat3[x][2]
+                denominacio = lcat3[x][2]
                 Credit_Ini = lcat3[x][3]
                 obligacions = lcat3[x][4]
                 Perc = 100 * lcat3[x][5]
-                fila = [str(ID_SECCIO), str(Credit_Ini), str(obligacions), str(Perc)]
+                fila = [str(ID_SECCIO), str(denominacio),str(Credit_Ini), str(obligacions), str(Perc)]
                 llista_CAT3.append(fila)
         x = x+1
     
