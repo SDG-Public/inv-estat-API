@@ -203,8 +203,56 @@ def descarga_lista_sharepoint(lista_ficheros):
       response = File.open_binary(ctx, down_file_path)
       blob.upload_blob(response.content, overwrite=True)
 
-   
-
+def excel_ccaa(matriz_valores):
+    llista_CCAA = []
+    
+    flag_ccaa = 0
+    for x,row in enumerate(matriz_valores):
+        columna_upper = str(row[0]).upper()
+        if flag_ccaa == 1:
+            if "TOTAL" in columna_upper[:10]:
+                break
+            else:
+                ID_CCAA = str(row[0]).split(' ')[0]
+                Credit_Ini = row[1]
+                Credit_Fi = row[2]
+                Perc = 100 * row[3]
+                fila = [str(ID_CCAA), str(Credit_Ini), str(Credit_Fi), str(Perc)]
+                llista_CCAA.append(fila)    
+        if "COMUNIDAD" in columna_upper[:10]:
+            flag_ccaa = 1
+    return llista_CCAA
+    
+def excel_cat(matriz_valores,index_shift,n_columnas):
+    llista_cat = []
+    
+    flag_cat = 0
+    for x,row in enumerate(matriz_valores):
+        columna_upper = str(row[0]).upper()
+        if flag_cat == 1:
+            if "TOTALES" in columna_upper:
+                break
+            else:
+                if n_columnas == 5:
+                    ID_SECCIO = row[0+index_shift]
+                    Denom = row[1+index_shift]
+                    Credit_Ini = row[2+index_shift]
+                    Credit_Fi = row[3+index_shift]
+                    Perc = 100 * row[4+index_shift]
+                    fila = [str(ID_SECCIO),str(Denom), str(Credit_Ini), str(Credit_Fi), str(Perc)]
+                    llista_cat.append(fila)   
+                elif n_columnas == 4:
+                    ID_SECCIO = row[0+index_shift]
+                    Credit_Ini = row[1+index_shift]
+                    Credit_Fi = row[2+index_shift]
+                    Perc = 100 * row[3+index_shift]
+                    fila = [str(ID_SECCIO), str(Credit_Ini), str(Credit_Fi), str(Perc)]
+                    llista_cat.append(fila)
+        if "ENTIDAD" in columna_upper[:10] or "SECCIÓN" in columna_upper[:10]:
+            flag_cat = 1
+    return llista_cat
+    
+    
 app = Flask(__name__)
 
 # Este controla la pagina inicial de nuestra Web App
@@ -351,29 +399,6 @@ def Estado_org_script(Estado_year: int):
     for file in lista_ficheros:
        fitxer_content = descarga_blob(file)
        llista_final = individual(fitxer_content,llista_final)
-    
-    #llista_108 = descarga_blob('N_22_E_V_2_R_1_202_1_108_1.CSV')
-    #llista_114 = descarga_blob('N_22_E_V_2_R_1_202_1_114_1.CSV')
-    #llista_115 = descarga_blob('N_22_E_V_2_R_1_202_1_115_1.CSV')
-    #llista_116 = descarga_blob('N_22_E_V_2_R_1_202_1_116_1.CSV')
-    #llista_117 = descarga_blob('N_22_E_V_2_R_1_202_1_117_1.CSV')
-    #llista_119 = descarga_blob('N_22_E_V_2_R_1_202_1_119_1.CSV')
-    #llista_120 = descarga_blob('N_22_E_V_2_R_1_202_1_120_1.CSV')
-    #llista_123 = descarga_blob('N_22_E_V_2_R_1_202_1_123_1.CSV')
-    #llista_124 = descarga_blob('N_22_E_V_2_R_1_202_1_124_1.CSV')
-    #llista_128 = descarga_blob('N_22_E_V_2_R_1_202_1_128_1.CSV')
- 
-    #llista_final = individual(llista_108,llista_final)
-    #llista_final = individual(llista_114,llista_final)
-    #llista_final = individual(llista_115,llista_final)
-    #llista_final = individual(llista_116,llista_final)
-    #llista_final = individual(llista_117,llista_final)
-    #llista_final = individual(llista_119,llista_final)
-    #llista_final = individual(llista_120,llista_final)
-    #llista_final = individual(llista_123,llista_final)
-    #llista_final = individual(llista_124,llista_final)
-    #llista_final = individual(llista_128,llista_final)
-    #anyo = llista_108[5][1].split(' ')[2]
     
     capcelera = ['ID_MINISTERI','DESC_MINISTERI' ,'COMUNITAT_AUTONOMA', 'CODI_CENTRE','ID_PROGRAMA', 'ID_ARTICLE','DESC_CENTRE','ID_PROJECTE', 'NOM_PROJECTE','ANY_INICI', 'ANY_FI', 'PROVINCIA', 'TIPUS', 'COST_TOTAL', 'ANY_ANTERIOR', 'ANY_ACTUAL','ANY_ACTUAL+1', 'ANY_ACTUAL+2', 'ANY_ACTUAL+3']
     
@@ -729,7 +754,8 @@ def Pressupostaria_script():
     file_path = 'ORIGEN.xlsx'
     
     # Posicions de les pàgines que ens interessen
-    posicions = [0, 2, 24, 26, 48, 50, 67, 69]
+    #posicions = [0, 2, 24, 26, 48, 50, 67, 69]
+    posicions = ["00 AGE (CCAA)","02 Cataluña","00 OOAA (CCAA)","02 Cataluña (2)","00 ESTIMATIVOS (CCAA)","02 Cataluña (3)","00 EMP (CCAA)","02 Cataluña (4)"]
     
     # read the excel file
     df = descarga_excel(file_path,posicions)
@@ -761,32 +787,19 @@ def Pressupostaria_script():
     lCCAA6 = CCAA6.values.tolist()
     lcat7 = cat7.values.tolist()
     
-    anyo = lcat1[1][0].split(' ')[16]
+    lcat_split= lcat1[1][0].split(' ')
+    for x,item in enumerate(lcat_split):
+        if item == 'EJERCICIO':
+            index_ejercicio = x
+    anyo = lcat_split[index_ejercicio+1]
     
     # Retallem les fileres que no ens interessen per cada llista
     
     ################# Per agrupacions segons Comunitats Autònomes ###################
     
     # Per CCAA0
-    
-    llista_CCAA0 = []
-    capcelera_CCAA = ['IDCCAA', 'Crèdit Inicial', 'Obligacions Reconegudes', '%']
-    capcelera_CCAA2 = ['IDCCAA', 'Inversió Inicial', 'Inversió Real', '%']
-    x = 7
-    
-    for row in lCCAA0:
-        if x > 6:
-            if lCCAA0[x][0].split(' ')[0] == 'Total':
-                break
-            else:
-                ID_CCAA = lCCAA0[x][0].split(' ')[0]
-                Credit_Ini = lCCAA0[x][1]
-                Credit_Fi = lCCAA0[x][2]
-                Perc = 100 * lCCAA0[x][3]
-                fila = [str(ID_CCAA), str(Credit_Ini), str(Credit_Fi), str(Perc)]
-                llista_CCAA0.append(fila)
-        x = x+1
-    
+    capcelera_CCAA = ['IDCCAA', 'Crèdit Inicial', 'Obligacions Reconegudes', '%']    
+    llista_CCAA0 = excel_ccaa(lCCAA0)
     llista_CCAA0.insert(0, capcelera_CCAA)
     
     upload_file	= anyo + "_EXEC_FACT_AGR_CCAA_AGE.csv"
@@ -794,44 +807,15 @@ def Pressupostaria_script():
 
     
     # Per CCAA 2
-    llista_CCAA2 = []
-    x = 7
-    
-    for row in lCCAA2:
-        if x > 6:
-            if lCCAA2[x][0].split(' ')[0] == 'Total':
-                break
-            else:
-                ID_CCAA = lCCAA2[x][0].split(' ')[0]
-                Credit_Ini = lCCAA2[x][1]
-                Credit_Fi = lCCAA2[x][2]
-                Perc = 100 * lCCAA2[x][3]
-                fila = [str(ID_CCAA), str(Credit_Ini), str(Credit_Fi), str(Perc)]
-                llista_CCAA2.append(fila)
-        x = x+1
-    
+    capcelera_CCAA2 = ['IDCCAA', 'Inversió Inicial', 'Inversió Real', '%']   
+    llista_CCAA2 = excel_ccaa(lCCAA2)
     llista_CCAA2.insert(0, capcelera_CCAA)
 
     upload_file	= anyo + "_EXEC_FACT_AGR_CCAA_OOAA_RE.csv"
     subida_blob(upload_file,llista_CCAA2)
     
     # Per CCAA 4
-    llista_CCAA4 = []
-    x = 7
-    
-    for row in lCCAA4:
-        if x > 6:
-            if lCCAA4[x][0].split(' ')[0] == 'Total':
-                break
-            else:
-                ID_CCAA = lCCAA4[x][0].split(' ')[0]
-                Credit_Ini = lCCAA4[x][1]
-                Credit_Fi = lCCAA4[x][2]
-                Perc = 100 * lCCAA4[x][3]
-                fila = [str(ID_CCAA), str(Credit_Ini), str(Credit_Fi), str(Perc)]
-                llista_CCAA4.append(fila)
-        x = x+1
-    
+    llista_CCAA4 = excel_ccaa(lCCAA4)   
     llista_CCAA4.insert(0, capcelera_CCAA2)
 
     upload_file	= anyo + "_EXEC_FACT_AGR_CCAA_SP_ADMIN.csv"
@@ -839,22 +823,7 @@ def Pressupostaria_script():
         
     
     # Per CCAA 6
-    llista_CCAA6 = []
-    x = 7
-    
-    for row in lCCAA6:
-        if x > 6:
-            if lCCAA6[x][0].split(' ')[0] == 'Total':
-                break
-            else:
-                ID_CCAA = lCCAA6[x][0].split(' ')[0]
-                Credit_Ini = lCCAA6[x][1]
-                Credit_Fi = lCCAA6[x][2]
-                Perc = 100 * lCCAA6[x][3]
-                fila = [str(ID_CCAA), str(Credit_Ini), str(Credit_Fi), str(Perc)]
-                llista_CCAA6.append(fila)
-        x = x+1
-    
+    llista_CCAA6 = excel_ccaa(lCCAA6)  
     llista_CCAA6.insert(0, capcelera_CCAA2)
 
     upload_file	= anyo + "_EXEC_FACT_AGR_CCAA_SP_EMPR.csv"
@@ -863,25 +832,10 @@ def Pressupostaria_script():
     
     ######################### Per Catalunya ################################
     
-    llista_CAT1 = []
+    # Per CAT 1
     capcelera_CAT1 = ['Codi Secció','Denominació', 'Crèdit Inicial', 'Obligacions Reconegudes', '%']
-    x = 7
-    
-    for row in lcat1:
-        if x > 6:
-    
-            if lcat1[x][0].split(' ')[0] == 'Total':
-                break
-            else:
-                ID_SECCIO = lcat1[x][0]
-                Denom = lcat1[x][1]
-                Credit_Ini = lcat1[x][2]
-                Credit_Fi = lcat1[x][3]
-                Perc = 100 * lcat1[x][4]
-                fila = [str(ID_SECCIO),str(Denom), str(Credit_Ini), str(Credit_Fi), str(Perc)]
-                llista_CAT1.append(fila)
-        x = x+1
-    
+    llista_CAT1 = excel_cat(lcat1,0,5)
+   
     llista_CAT1.insert(0, capcelera_CAT1)
 
     upload_file	= anyo + "_EXEC_FACT_DET_AGE.csv"
@@ -889,26 +843,10 @@ def Pressupostaria_script():
 
     
     # Per CAT 3
-    
-    llista_CAT3 = []
-    #capcelera_CAT3 = ['Codi Presupostari Organisme', 'Denominació', 'Crèdit Inicial', 'Obligacions Reconegudes', '%']
+
     capcelera_CAT3 = ['Codi Secció','Denominació', 'Crèdit Inicial', 'Obligacions Reconegudes', '%']
-    x = 7
-    
-    for row in lcat3:
-        if x > 6:
-            if lcat3[x][0] == 'Totales':
-                break
-            elif lcat3[x][1] > 0:
-                ID_SECCIO = lcat3[x][1]
-                denominacio = lcat3[x][2]
-                Credit_Ini = lcat3[x][3]
-                obligacions = lcat3[x][4]
-                Perc = 100 * lcat3[x][5]
-                fila = [str(ID_SECCIO), str(denominacio),str(Credit_Ini), str(obligacions), str(Perc)]
-                llista_CAT3.append(fila)
-        x = x+1
-    
+    llista_CAT3 = excel_cat(lcat3,1,5)
+   
     llista_CAT3.insert(0, capcelera_CAT3)
     
     upload_file	= anyo + "_EXEC_FACT_DET_OOAA_RE.csv"
@@ -916,46 +854,18 @@ def Pressupostaria_script():
 
     
     # Per CAT 5
-    llista_CAT5 = []
+    llista_CAT5 = excel_cat(lcat5,0,4)
     capcelera_CAT5 = ['Entitat', 'Inversio Inicial', 'Inversio Real', '%']
-    x = 7
-    
-    for row in lcat5:
-        if x > 6:
-            if lcat5[x][0] == 'Totales':
-                break
-            else:
-                ID_SECCIO = lcat5[x][0]
-                Credit_Ini = lcat5[x][1]
-                Credit_Fi = lcat5[x][2]
-                Perc = 100 * lcat5[x][3]
-                fila = [str(ID_SECCIO), str(Credit_Ini), str(Credit_Fi), str(Perc)]
-                llista_CAT5.append(fila)
-        x = x+1
-    
+   
     llista_CAT5.insert(0, capcelera_CAT5)
 
     upload_file	= anyo + "_EXEC_FACT_DET_SP_ADMIN.csv"
     subida_blob(upload_file,llista_CAT5)
     
     # Per CAT 7
-    llista_CAT7 = []
+    llista_CAT7 = excel_cat(lcat7,0,4)
     capcelera_CAT7 = ['Entitat', 'Inversió Inicial', 'Inversió Real', '%']
-    x = 7
-    
-    for row in lcat7:
-        if x > 6:
-            if lcat7[x][0] == 'Totales':
-                break
-            else:
-                ID_SECCIO = lcat7[x][0]
-                Credit_Ini = lcat7[x][1]
-                Credit_Fi = lcat7[x][2]
-                Perc = 100 * lcat7[x][3]
-                fila = [str(ID_SECCIO), str(Credit_Ini), str(Credit_Fi), str(Perc)]
-                llista_CAT7.append(fila)
-        x = x+1
-    
+   
     llista_CAT7.insert(0, capcelera_CAT7)
     
     upload_file	= anyo + "_EXEC_FACT_DET_SP_EMPR.csv"
