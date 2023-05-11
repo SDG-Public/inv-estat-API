@@ -20,7 +20,7 @@ baseurl = 'https://gencat.sharepoint.com'
 basesite =  os.environ['CUSTOMCONNSTR_basesite'] #'/sites/ProvespythonInvEstat' 
 siteurl = baseurl + basesite
 relative_file_path = basesite + '/Documents compartits/'
-relative_file_path_no_slash =  relative_file_path[:-2]
+relative_file_path_no_slash =  relative_file_path[:-1]
 username = os.environ['CUSTOMCONNSTR_username'] #config.username
 pwd = os.environ['CUSTOMCONNSTR_password'] #config.password
 
