@@ -279,26 +279,14 @@ def download_files():
 # Descargamos los ficheros del SharePoint
 @app.route('/monthly_download', methods=['GET'])
 def monthly_download_script():
-   
-   ctx_auth = AuthenticationContext(siteurl) # should also be the siteurl
-   ctx_auth.acquire_token_for_user(username, pwd)
-   ctx = ClientContext(siteurl, ctx_auth) # make sure you auth to the siteurl.
-    
-   currentMonth = datetime.now().strftime('%m')
-   currentYear = datetime.now().year 
-    
-   fichero = str(currentYear) + "_" + currentMonth + "_LIA_FACT.xlsx" 
 
-   # Bajada y subida de fichero
-   down_file_path = relative_file_path + fichero
-   
-   # Creamos una conexión con un nuevo nombre de destino
-   blob = BlobClient.from_connection_string(conn_str=connectionString, container_name=containerName,blob_name=fichero)
-   
-   response = File.open_binary(ctx, down_file_path)
-   blob.upload_blob(response.content, overwrite=True)
-                                         
-   
+   file_pattern = "licitacionesPerfilesContratanteCompleto3_"
+
+   # Buscamos todos los archivos que comienzan por "licitacionesPerfilesContratanteCompleto3_"
+   matching_files = lista_sharepoint(file_pattern)
+
+   descarga_lista_sharepoint(matching_files)
+
    return "Archivos descargados correctamente"
 
 
